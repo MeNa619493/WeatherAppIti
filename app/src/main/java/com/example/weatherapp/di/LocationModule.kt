@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class LocationModule {
+object LocationModule {
     @Provides
     fun provideFusedLocationProviderClient(
         @ApplicationContext context: Context

@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.ItemHourlyBinding
 import com.example.weatherapp.model.pojo.Hourly
+import com.example.weatherapp.utils.Constants
 
 class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.MyViewHolder>(
     HourlyDiffCallback()
@@ -24,7 +26,14 @@ class HourlyAdapter : ListAdapter<Hourly, HourlyAdapter.MyViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(hourly: Hourly) {
-
+            binding.apply {
+                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it) }
+                tvTemp.text = hourly.temp.toString()
+                Glide
+                    .with(binding.root)
+                    .load("https://openweathermap.org/img/wn/${hourly.weather?.get(0)?.icon ?: ""}.png?fbclid=IwAR2Nk0UQ5anrxUCLubc6bRZTqN65qD2TE2Rk0EvU6-609jRf_HuHPAnP-YE")
+                    .into(ivHourDesc)
+            }
         }
 
         companion object {

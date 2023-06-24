@@ -40,7 +40,7 @@
             android:layout_margin="8dp"
             android:textAlignment="center"
             android:textSize="18sp"
-            tools:text="text"/>
+            android:text="text"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -20,9 +20,16 @@ import androidx.navigation.NavAction
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
+import com.example.weatherapp.ui.home.adapters.DailyAdapter
+import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 
@@ -34,6 +41,9 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private val hourlyAdapter by lazy { HourlyAdapter() }
+    private val dailyAdapter by lazy { DailyAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,11 +64,15 @@ class HomeFragment : Fragment() {
             getLastLocation()
         }
 
-
         viewModel.locationLiveData.observe(viewLifecycleOwner) {
             Log.d(TAG, "onViewCreated: location is here")
             showAddress(it)
+            viewModel.getCurrentWeather("${it.latitude}", "${it.longitude}","en", "standard")
         }
+
+        observeWeatherResponse()
+        setupHourlyRecyclerView()
+        setupDailyRecyclerView()
     }
 
     private fun getLastLocation() {
@@ -67,7 +81,7 @@ class HomeFragment : Fragment() {
                 viewModel.requestNewLocationData()
                 if (viewModel.getIsMapBoolean(Constants.IS_MAP, false)) {
                     Log.d(TAG, "onViewCreated: Map is here")
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMapFragment())
+                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMapFragment(false))
                 }
                 Log.d(TAG, "onViewCreated: GPS is here")
             } else {
@@ -133,10 +147,69 @@ class HomeFragment : Fragment() {
                 1
             )
             addressList?.let {
-                binding.tvAddress.text = it[0].adminArea
+                binding.tvAddress.text = "${it[0].countryName}, ${it[0].adminArea}"
             }
         } catch (e: IOException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun observeWeatherResponse() {
+        viewModel.weather.observe(viewLifecycleOwner) { response ->
+            Log.d(TAG, "observeWeatherResponse: ${response.data}")
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        hourlyAdapter.submitList(it.hourly)
+                        dailyAdapter.submitList(it.daily)
+                        initUi(it)
+                    }
+                }
+                is NetworkResult.Error -> {
+
+                }
+                is NetworkResult.Loading -> {
+
+                }
+            }
+        }
+    }
+
+    private fun initUi(weatherResponse: WeatherResponse) {
+        binding.apply {
+            tvDate.text = Constants.convertCurrentDate()
+            weatherResponse.current?.weather?.get(0)?.let {
+                tvWeatherDesc.text = it.description
+
+                Glide
+                    .with(binding.root)
+                    .load("https://openweathermap.org/img/wn/${it.icon}@2x.png")
+                    .into(ivWeather);
+
+            }
+            tvTemp.text = weatherResponse.current?.temp.toString()
+            tvPressureDeg.text = weatherResponse.current?.pressure.toString()
+            tvWindDeg.text = weatherResponse.current?.wind_speed.toString()
+            tvHumidityDeg.text = weatherResponse.current?.humidity.toString()
+            tvCloudDeg.text = weatherResponse.current?.clouds.toString()
+            tvRayDeg.text = weatherResponse.current?.uvi.toString()
+            tvVisibilityDeg.text = weatherResponse.current?.visibility.toString()
+        }
+    }
+
+    private fun setupHourlyRecyclerView() {
+        binding.rvHourly.apply {
+            adapter = hourlyAdapter
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupDailyRecyclerView() {
+        binding.rvDaily.apply {
+            adapter = dailyAdapter
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
@@ -150,3 +223,4 @@ class HomeFragment : Fragment() {
         private const val PERMISSION_ID = 44
     }
 }
+

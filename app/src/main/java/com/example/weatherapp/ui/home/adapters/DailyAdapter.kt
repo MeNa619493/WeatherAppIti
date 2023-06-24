@@ -1,12 +1,16 @@
 package com.example.weatherapp.ui.home.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.ItemDailyBinding
 import com.example.weatherapp.model.pojo.Daily
+import com.example.weatherapp.ui.home.HomeFragment
+import com.example.weatherapp.utils.Constants
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
     DailyDiffCallback()
@@ -24,7 +28,18 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(daily: Daily) {
+            binding.apply {
+                daily.dt?.let {
+                    tvDay.text = Constants.convertLongToDayDate(it)
+                }
+                tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
+                tvMaxMinTemp.text = "${daily.temp?.max} / ${daily.temp?.min}"
 
+                Glide
+                    .with(binding.root)
+                    .load("https://openweathermap.org/img/wn/${daily.weather?.get(0)?.icon ?: ""}.png?fbclid=IwAR2Nk0UQ5anrxUCLubc6bRZTqN65qD2TE2Rk0EvU6-609jRf_HuHPAnP-YE")
+                    .into(ivDayDesc)
+            }
         }
 
         companion object {

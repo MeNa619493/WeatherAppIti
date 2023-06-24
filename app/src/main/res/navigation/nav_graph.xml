@@ -14,13 +14,26 @@
         <action
             android:id="@+id/action_homeFragment_to_mapFragment"
             app:destination="@id/mapFragment"
-            app:popUpTo="@id/homeFragment"/>
+            app:popUpTo="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.example.weatherapp.ui.FavoritesFragment"
+        android:name="com.example.weatherapp.ui.favorites.FavoritesFragment"
         android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_mapFragment"
+            app:destination="@id/mapFragment"
+            app:popUpTo="@id/favoritesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.weatherapp.ui.SettingsFragment"
@@ -30,5 +43,9 @@
         android:id="@+id/mapFragment"
         android:name="com.example.weatherapp.ui.map.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="isFav"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

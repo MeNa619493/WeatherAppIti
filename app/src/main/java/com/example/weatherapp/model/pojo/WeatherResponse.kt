@@ -1,12 +1,16 @@
 package com.example.weatherapp.model.pojo
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity
+@Parcelize
 data class WeatherResponse(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
+    var location: String?,
     val current: Current?,
     val daily: List<Daily>?,
     val hourly: List<Hourly>?,
@@ -14,15 +18,17 @@ data class WeatherResponse(
     val lon: Double?,
     val timezone: String?,
     val timezone_offset: Int?
-)
+): Parcelable
 
+@Parcelize
 data class Weather(
     val description: String?,
     val icon: String?,
     val id: Int?,
     val main: String?
-)
+): Parcelable
 
+@Parcelize
 data class Temp(
     val day: Double?,
     val eve: Double?,
@@ -30,12 +36,13 @@ data class Temp(
     val min: Double?,
     val morn: Double?,
     val night: Double?
-)
+): Parcelable
 
+@Parcelize
 data class Hourly(
     val clouds: Int?,
     val dew_point: Double?,
-    val dt: Int?,
+    val dt: Long?,
     val feels_like: Double?,
     val humidity: Int?,
     val pop: Double?,
@@ -47,19 +54,21 @@ data class Hourly(
     val wind_deg: Int?,
     val wind_gust: Double?,
     val wind_speed: Double?
-)
+): Parcelable
 
+@Parcelize
 data class FeelsLike(
     val day: Double?,
     val eve: Double?,
     val morn: Double?,
     val night: Double?
-)
+): Parcelable
 
+@Parcelize
 data class Daily(
     val clouds: Int?,
     val dew_point: Double?,
-    val dt: Int?,
+    val dt: Long?,
     val feels_like: FeelsLike?,
     val humidity: Int?,
     val moon_phase: Double?,
@@ -76,22 +85,23 @@ data class Daily(
     val wind_deg: Int?,
     val wind_gust: Double?,
     val wind_speed: Double?
-)
+): Parcelable
 
+@Parcelize
 data class Current(
-    val clouds: Int,
-    val dew_point: Double,
-    val dt: Int,
-    val feels_like: Double,
-    val humidity: Int,
-    val pressure: Int,
-    val sunrise: Int,
-    val sunset: Int,
-    val temp: Double,
-    val uvi: Int,
-    val visibility: Int,
-    val weather: List<Weather>,
-    val wind_deg: Int,
-    val wind_gust: Double,
-    val wind_speed: Double
-)
+    val clouds: Int?,
+    val dew_point: Double?,
+    val dt: Long?,
+    val feels_like: Double?,
+    val humidity: Int?,
+    val pressure: Int?,
+    val sunrise: Int?,
+    val sunset: Int?,
+    val temp: Double?,
+    val uvi: Double?,
+    val visibility: Int?,
+    val weather: List<Weather>?,
+    val wind_deg: Int?,
+    val wind_gust: Double?,
+    val wind_speed: Double?
+): Parcelable
