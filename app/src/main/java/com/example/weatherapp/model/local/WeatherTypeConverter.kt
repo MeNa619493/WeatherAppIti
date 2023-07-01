@@ -1,10 +1,7 @@
 package com.example.weatherapp.model.local
 
 import androidx.room.TypeConverter
-import com.example.weatherapp.model.pojo.Current
-import com.example.weatherapp.model.pojo.Daily
-import com.example.weatherapp.model.pojo.Hourly
-import com.example.weatherapp.model.pojo.Weather
+import com.example.weatherapp.model.pojo.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -22,20 +19,43 @@ class WeatherTypeConverter {
     fun hourlyListToJson(hourlyList: List<Hourly>?) = Gson().toJson(hourlyList)
 
     @TypeConverter
-    fun jsonToHourlyList(hourlyString: String) =
-        Gson().fromJson(hourlyString, Array<Hourly>::class.java)?.toList()
+    fun jsonToHourlyList(hourlyString: String?): List<Hourly>? {
+        hourlyString?.let {
+            return Gson().fromJson(it, Array<Hourly>::class.java)?.toList()
+        }
+        return emptyList()
+    }
 
     @TypeConverter
-    fun dailyListToJson(dailyList: List<Daily>) = Gson().toJson(dailyList)
+    fun dailyListToJson(dailyList: List<Daily>?) = Gson().toJson(dailyList)
 
     @TypeConverter
-    fun jsonToDailyList(dailyString: String) =
-        Gson().fromJson(dailyString, Array<Daily>::class.java).toList()
+    fun jsonToDailyList(dailyString: String?): List<Daily>? {
+        dailyString?.let {
+            return Gson().fromJson(it, Array<Daily>::class.java)?.toList()
+        }
+        return emptyList()
+    }
 
     @TypeConverter
-    fun weatherListToJson(weatherList: List<Weather>) = Gson().toJson(weatherList)
+    fun weatherListToJson(weatherList: List<Weather>?) = Gson().toJson(weatherList)
 
     @TypeConverter
-    fun jsonToWeatherList(weatherString: String) =
-        Gson().fromJson(weatherString, Array<Weather>::class.java).toList()
+    fun jsonToWeatherList(weatherString: String?): List<Weather>? {
+        weatherString?.let {
+            return Gson().fromJson(it, Array<Weather>::class.java)?.toList()
+        }
+        return emptyList()
+    }
+
+    @TypeConverter
+    fun alertListToJson(alertList: List<Alert>?) = Gson().toJson(alertList)
+
+    @TypeConverter
+    fun jsonToAlertList(alertString: String?): List<Alert>? {
+        alertString?.let {
+            return Gson().fromJson(it, Array<Alert>::class.java)?.toList()
+        }
+        return emptyList()
+    }
 }

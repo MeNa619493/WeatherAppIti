@@ -22,7 +22,9 @@ class SplashActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             if (viewModel.getFirstTimeBoolean(Constants.FIRST_TIME, true)){
-                ChooseDialogFragment().show(supportFragmentManager,"First time settings")
+                if (!supportFragmentManager.isDestroyed) {
+                    ChooseDialogFragment().show(supportFragmentManager, "First time settings")
+                }
             } else {
                 startMainActivity()
             }

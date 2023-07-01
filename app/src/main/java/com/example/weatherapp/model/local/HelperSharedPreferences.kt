@@ -14,8 +14,8 @@ class HelperSharedPreferences @Inject constructor(private val context: Context) 
         sharedPreferences.edit().putString(key, value).apply()
     }
 
-    fun getString(key: String, defaultValue: String): String? {
-        return sharedPreferences.getString(key, defaultValue)
+    fun getString(key: String, defaultValue: String): String {
+        return sharedPreferences.getString(key, defaultValue)!!
     }
 
     fun addBoolean(key: String, value: Boolean) {

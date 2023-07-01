@@ -1,5 +1,6 @@
 package com.example.weatherapp.di
 
+import com.example.weatherapp.model.local.AlertDao
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.local.WeatherDao
 import com.example.weatherapp.model.remote.ApiService
@@ -19,10 +20,11 @@ object RepositoryModule {
     @Singleton
     fun provideMoviesRepository(
         apiService: ApiService,
-        dao: WeatherDao,
+        weatherDao: WeatherDao,
+        alertDao: AlertDao,
         sharedPreferences: HelperSharedPreferences
     ): Repo {
-        return RepoImpl(apiService, dao, sharedPreferences)
+        return RepoImpl(apiService, weatherDao, alertDao, sharedPreferences)
     }
 
 }

@@ -2,10 +2,12 @@ package com.example.weatherapp.ui.home
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -15,13 +17,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavAction
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.model.pojo.WeatherResponse
@@ -29,9 +30,11 @@ import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -67,7 +70,7 @@ class HomeFragment : Fragment() {
         viewModel.locationLiveData.observe(viewLifecycleOwner) {
             Log.d(TAG, "onViewCreated: location is here")
             showAddress(it)
-            viewModel.getCurrentWeather("${it.latitude}", "${it.longitude}","en", "standard")
+            viewModel.getCurrentWeather("${it.latitude}", "${it.longitude}", "en", "standard")
         }
 
         observeWeatherResponse()
@@ -76,12 +79,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun getLastLocation() {
-        if (checkPermission()){
-            if (isLocationEnabled()){
+        if (checkPermission()) {
+            if (isLocationEnabled()) {
                 viewModel.requestNewLocationData()
                 if (viewModel.getIsMapBoolean(Constants.IS_MAP, false)) {
                     Log.d(TAG, "onViewCreated: Map is here")
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToMapFragment(false))
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToMapFragment(
+                            false
+                        )
+                    )
                 }
                 Log.d(TAG, "onViewCreated: GPS is here")
             } else {
@@ -120,15 +127,16 @@ class HomeFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == PERMISSION_ID){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation()
             }
         }
     }
 
     private fun isLocationEnabled(): Boolean {
-        val locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
@@ -159,6 +167,7 @@ class HomeFragment : Fragment() {
             Log.d(TAG, "observeWeatherResponse: ${response.data}")
             when (response) {
                 is NetworkResult.Success -> {
+                    hideShimmer()
                     response.data?.let {
                         hourlyAdapter.submitList(it.hourly)
                         dailyAdapter.submitList(it.daily)
@@ -166,10 +175,10 @@ class HomeFragment : Fragment() {
                     }
                 }
                 is NetworkResult.Error -> {
-
+                    hideShimmer()
                 }
                 is NetworkResult.Loading -> {
-
+                    showShimmer()
                 }
             }
         }
@@ -177,15 +186,21 @@ class HomeFragment : Fragment() {
 
     private fun initUi(weatherResponse: WeatherResponse) {
         binding.apply {
-            tvDate.text = Constants.convertCurrentDate()
-            weatherResponse.current?.weather?.get(0)?.let {
-                tvWeatherDesc.text = it.description
 
-                Glide
-                    .with(binding.root)
-                    .load("https://openweathermap.org/img/wn/${it.icon}@2x.png")
-                    .into(ivWeather);
+            weatherResponse.current?.let {
+                it.dt?.let { date ->
+                    tvDate.text = Constants.convertLongToDayDate(date)
+                }
 
+                it.weather?.get(0)?.let { weather ->
+                    tvWeatherDesc.text = weather.description
+
+                    Glide
+                        .with(binding.root)
+                        .load("https://openweathermap.org/img/wn/${weather.icon}@2x.png")
+                        .into(ivWeather)
+
+                }
             }
             tvTemp.text = weatherResponse.current?.temp.toString()
             tvPressureDeg.text = weatherResponse.current?.pressure.toString()
@@ -201,14 +216,14 @@ class HomeFragment : Fragment() {
         binding.rvHourly.apply {
             adapter = hourlyAdapter
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
     private fun setupDailyRecyclerView() {
         binding.rvDaily.apply {
             adapter = dailyAdapter
-            setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
@@ -216,6 +231,22 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showShimmer() {
+        binding.apply {
+            llWeatherCard.visibility = View.GONE
+            shimmerView.visibility = View.VISIBLE
+            shimmerView.startShimmer()
+        }
+    }
+
+    private fun hideShimmer() {
+        binding.apply {
+            shimmerView.stopShimmer()
+            shimmerView.visibility = View.GONE
+            llWeatherCard.visibility = View.VISIBLE
+        }
     }
 
     companion object {

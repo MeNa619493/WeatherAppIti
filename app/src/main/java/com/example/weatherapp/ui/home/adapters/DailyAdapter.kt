@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.home.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.ItemDailyBinding
 import com.example.weatherapp.model.pojo.Daily
-import com.example.weatherapp.ui.home.HomeFragment
 import com.example.weatherapp.utils.Constants
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
@@ -30,7 +28,7 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
         fun bind(daily: Daily) {
             binding.apply {
                 daily.dt?.let {
-                    tvDay.text = Constants.convertLongToDayDate(it)
+                    tvDay.text = Constants.convertLongToDayName(it)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
                 tvMaxMinTemp.text = "${daily.temp?.max} / ${daily.temp?.min}"

@@ -1,7 +1,5 @@
 package com.example.weatherapp.utils
 
-import android.util.Log
-import com.example.weatherapp.ui.home.HomeFragment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -11,8 +9,16 @@ object Constants {
     const val DATABASE_NAME = "WeatherDatabase"
     const val FIRST_TIME = "first"
     const val IS_MAP = "map"
+    const val ALERT_ID = "id"
+    const val DESCRIPTION = "description"
+    const val ICON = "icon"
+    const val LAT = "lat"
+    const val LONG = "long"
 
-    fun convertLongToDayDate(time: Long): String {
+    const val NOTIFICATION_NAME: String = "Weather"
+    const val NOTIFICATION_CHANNEL: String = "Weather_channel_01"
+
+    fun convertLongToDayName(time: Long): String {
         val format = SimpleDateFormat("EEEE")
         return format.format(Date(time*1000))
     }
@@ -22,9 +28,26 @@ object Constants {
         return format.format(Date(time*1000))
     }
 
-    fun convertCurrentDate(): String {
-        val date = Calendar.getInstance().time
+    fun convertLongToDayDate(time: Long): String {
+        val format = SimpleDateFormat("d MMM, yyyy")
+        return format.format(time*1000)
+    }
+
+    fun getDateMillis(date: String): Long {
+        val f = SimpleDateFormat("dd/MM/yyyy")
+        val d: Date = f.parse(date)
+        return d.time
+    }
+
+    fun convertLongToDayDateAlert(time: Long): String {
+        val date = Date(time)
         val format = SimpleDateFormat("dd/MM/yyyy")
+        return format.format(date)
+    }
+
+    fun convertLongToTimePicker(time: Long): String {
+        val date = Date(time-7200000)
+        val format = SimpleDateFormat("h:mm aa")
         return format.format(date)
     }
 }

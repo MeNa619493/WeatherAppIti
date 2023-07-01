@@ -22,12 +22,20 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.example.weatherapp.ui.favorites.FavoritesFragment"
+        android:name="com.example.weatherapp.ui.favorites.allfavorites.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
             android:id="@+id/action_favoritesFragment_to_mapFragment"
             app:destination="@id/mapFragment"
+            app:popUpTo="@id/favoritesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_favoritesFragment_to_favoriteDetailsFragment"
+            app:destination="@id/favoriteDetailsFragment"
             app:popUpTo="@id/favoritesFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -47,5 +55,27 @@
         <argument
             android:name="isFav"
             app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/alertsFragment"
+        android:name="com.example.weatherapp.ui.alerts.allalerts.AlertsFragment"
+        android:label="fragment_alerts"
+        tools:layout="@layout/fragment_alerts" >
+        <action
+            android:id="@+id/action_alertsFragment_to_alertDialogFragment"
+            app:destination="@id/alertDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/alertDialogFragment"
+        android:name="com.example.weatherapp.ui.alerts.dialog.AlertDialogFragment"
+        android:label="AlertDialogFragment" />
+    <fragment
+        android:id="@+id/favoriteDetailsFragment"
+        android:name="com.example.weatherapp.ui.favorites.favoritedetails.FavoriteDetailsFragment"
+        android:label="fragment_favorite_details"
+        tools:layout="@layout/fragment_favorite_details" >
+        <argument
+            android:name="weather"
+            app:argType="com.example.weatherapp.model.pojo.WeatherResponse" />
     </fragment>
 </navigation>

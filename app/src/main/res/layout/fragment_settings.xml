@@ -121,7 +121,7 @@
                 android:background="@drawable/background_2">
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/tv_from_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="168dp"
@@ -142,7 +142,7 @@
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView12">
+                    app:layout_constraintTop_toBottomOf="@+id/tv_from_date">
 
                     <RadioButton
                         android:id="@+id/radio_cms"

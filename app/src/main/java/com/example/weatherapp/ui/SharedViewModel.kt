@@ -8,9 +8,11 @@ import androidx.lifecycle.*
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.ui.home.HomeFragment
+import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.NetworkResult
 import com.google.android.gms.location.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -23,7 +25,7 @@ class SharedViewModel @Inject constructor(
 
     val locationLiveData: MutableLiveData<Location> = MutableLiveData()
 
-    val favLocationLiveData: MutableLiveData<Location> = MutableLiveData()
+    val favLocationState: MutableStateFlow<Location> = MutableStateFlow(Location("start"))
 
     private val _weather: MutableLiveData<NetworkResult<WeatherResponse>> = MutableLiveData()
     val weather: LiveData<NetworkResult<WeatherResponse>> = _weather
@@ -71,11 +73,13 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             val weatherResponse = repo.getCurrentWeather(lat, long, language, units)
             if (weatherResponse.isSuccessful) {
+                repo.addString(Constants.LAT, lat)
+                repo.addString(Constants.LONG, long)
                 weatherResponse.body()?.let {
                     _weather.postValue(NetworkResult.Success(it))
                 }
             } else {
-                Log.e("MealsViewModel", weatherResponse.errorBody().toString())
+                Log.e("SharedViewModel", weatherResponse.errorBody().toString())
                 _weather.postValue(NetworkResult.Error(weatherResponse.message()))
             }
         }
@@ -103,5 +107,11 @@ class SharedViewModel @Inject constructor(
 
     fun getAllFavs() : LiveData<List<WeatherResponse>> {
         return repo.getAllWeather().asLiveData()
+    }
+
+    fun deleteFav(weatherResponse: WeatherResponse) {
+        viewModelScope.launch {
+            repo.deleteWeather(weatherResponse)
+        }
     }
 }

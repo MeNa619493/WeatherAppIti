@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.map
 
+import android.annotation.SuppressLint
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -8,7 +9,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.weatherapp.R
@@ -30,6 +34,7 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
@@ -58,6 +63,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         addAutoComplete()
     }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -67,8 +73,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
         geoCoder = Geocoder(requireContext())
 
-        viewModel.favLocationLiveData.observe(viewLifecycleOwner) {
-            getAddress(it)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.favLocationState.collect {
+                    if (it.provider != "start") {
+                        getAddress(it)
+                    }
+                }
+            }
         }
 
         binding.btnDone.setOnClickListener {
@@ -162,7 +174,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private fun onLocationSelected() {
         if (this::selectedLocation.isInitialized) {
             if (args.isFav) {
-                viewModel.favLocationLiveData.value = selectedLocation
+                viewModel.favLocationState.value = selectedLocation
             } else {
                 viewModel.locationLiveData.value = selectedLocation
             }

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.alerts.dialog.AlertDialogFragment">
+
+    <TextView
+        android:id="@+id/date_from"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="70dp"
+        android:background="@drawable/bg_tv_dialog"
+        android:drawableEnd="@drawable/ic_baseline_calendar_month_24"
+        android:drawableTint="@color/bg_2"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="dd_mm_yy"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/date_to"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/date_to"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_tv_dialog"
+        android:drawableEnd="@drawable/ic_baseline_calendar_month_24"
+        android:drawableTint="@color/bg_2"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="dd_mm_yy"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hour_from"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="70dp"
+        android:background="@drawable/bg_tv_dialog"
+        android:drawableEnd="@drawable/ic_baseline_access_alarm_24"
+        android:drawableTint="@color/bg_2"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="00:00"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/hour_to"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_from_hour" />
+
+    <TextView
+        android:id="@+id/hour_to"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_tv_dialog"
+        android:drawableEnd="@drawable/ic_baseline_access_alarm_24"
+        android:drawableTint="@color/bg_2"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:text="00:00"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_to" />
+
+    <TextView
+        android:id="@+id/tv_from_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="from"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/date_from"
+        app:layout_constraintStart_toStartOf="@+id/date_from"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_to_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="to"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/date_to"
+        app:layout_constraintStart_toStartOf="@+id/date_to"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_from_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="from"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/hour_from"
+        app:layout_constraintStart_toStartOf="@+id/hour_from"
+        app:layout_constraintTop_toBottomOf="@+id/date_from" />
+
+    <TextView
+        android:id="@+id/tv_to_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="to"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/hour_to"
+        app:layout_constraintStart_toStartOf="@+id/hour_to"
+        app:layout_constraintTop_toBottomOf="@+id/date_to" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp"
+        android:text="Save"
+        android:textColor="@color/white"
+        app:cornerRadius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hour_from" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

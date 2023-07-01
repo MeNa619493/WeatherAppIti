@@ -34,6 +34,10 @@ object LocalModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: WeatherDatabase) = database.weatherDao()
+    fun provideWeatherDao(database: WeatherDatabase) = database.weatherDao()
+
+    @Singleton
+    @Provides
+    fun provideAlertDao(database: WeatherDatabase) = database.alertDao()
 
 }

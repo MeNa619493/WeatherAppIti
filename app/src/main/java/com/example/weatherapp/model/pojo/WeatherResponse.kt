@@ -3,6 +3,7 @@ package com.example.weatherapp.model.pojo
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Entity
@@ -17,7 +18,19 @@ data class WeatherResponse(
     val lat: Double?,
     val lon: Double?,
     val timezone: String?,
-    val timezone_offset: Int?
+    val timezone_offset: Int?,
+    val alerts: List<Alert>?
+): Parcelable
+
+@Parcelize
+data class Alert (
+    @SerializedName("sender_name")
+    val senderName: String?,
+    val event: String?,
+    val start: Long?,
+    val end: Long?,
+    val description: String?,
+    val tags: List<String>?
 ): Parcelable
 
 @Parcelize
