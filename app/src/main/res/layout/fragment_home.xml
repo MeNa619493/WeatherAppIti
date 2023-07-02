@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_1"
+    android:layoutDirection="locale"
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
@@ -26,6 +27,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/shimmer_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -33,9 +35,10 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    tools:text="address" />
+                    android:text="address" />
 
                 <TextView
+                    android:id="@+id/shimmer_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -43,7 +46,7 @@
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    tools:text="date" />
+                    android:text="date" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -339,7 +342,7 @@
                         android:layout_marginTop="4dp"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        android:textSize="44sp"
+                        android:textSize="30sp"
                         tools:text="25" />
                 </LinearLayout>
             </LinearLayout>
@@ -373,7 +376,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pressure"
+                        android:text="@string/pressure"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -401,7 +404,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Wind"
+                        android:text="@string/wind"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -429,7 +432,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="humidity"
+                        android:text="@string/humidity"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -464,7 +467,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cloud"
+                        android:text="@string/cloud"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -492,7 +495,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ultra Violet"
+                        android:text="@string/uv"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -520,7 +523,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Visibility"
+                        android:text="@string/visibility"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>

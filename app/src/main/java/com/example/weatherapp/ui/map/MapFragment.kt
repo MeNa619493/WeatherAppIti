@@ -18,7 +18,9 @@ import androidx.navigation.fragment.navArgs
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.databinding.FragmentMapBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.ui.SharedViewModel
+import com.example.weatherapp.utils.Constants
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -37,11 +39,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
 
     private lateinit var viewModel: SharedViewModel
     private lateinit var map: GoogleMap
@@ -193,8 +200,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 viewModel.saveFavLocationWeather(
                     "${location.latitude}",
                     "${location.longitude}",
-                    "en",
-                    "standard",
+                    sharedPreferences.getString(Constants.UNIT, "metric"),
+                    sharedPreferences.getString(Constants.LANGUAGE, "en"),
                     "${it[0].countryName}, ${it[0].adminArea}"
                 )
             }

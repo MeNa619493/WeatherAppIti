@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     android:background="@color/bg_2"
+    android:layoutDirection="locale"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.dialog.ChooseDialogFragment">
 
@@ -13,7 +14,7 @@
         android:id="@+id/tv_tittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Setting"
+        android:text="@string/settings"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -38,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="31dp"
         android:layout_marginEnd="8dp"
-        android:text="Location"
+        android:text="@string/location"
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
@@ -63,7 +64,7 @@
             android:buttonTint="@color/white"
             android:checked="true"
             android:padding="8dp"
-            android:text="GPS"
+            android:text="@string/gps"
             android:textColor="@color/white" />
 
         <RadioButton
@@ -72,7 +73,8 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/white"
             android:padding="8dp"
-            android:text="Map"
+            android:layout_marginStart="8dp"
+            android:text="@string/map"
             android:textColor="@color/white" />
     </RadioGroup>
 
@@ -81,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="16dp"
-        android:text="OK"
+        android:text="@string/ok"
         android:textColor="@color/white"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"

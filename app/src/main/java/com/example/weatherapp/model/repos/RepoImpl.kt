@@ -34,10 +34,10 @@ class RepoImpl(
     override suspend fun getCurrentWeather(
         lat: String,
         long: String,
-        language: String,
-        units: String
+        units: String,
+        language: String
     ): Response<WeatherResponse> {
-        return apiService.getCurrentWeather(lat, long, language, units)
+        return apiService.getCurrentWeather(lat, long, units, language)
     }
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {

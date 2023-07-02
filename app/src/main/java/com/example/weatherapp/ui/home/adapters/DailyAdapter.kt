@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.ItemDailyBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.Daily
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.getTemperatureUnit
 
 class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
     DailyDiffCallback()
@@ -31,7 +33,7 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
                     tvDay.text = Constants.convertLongToDayName(it)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
-                tvMaxMinTemp.text = "${daily.temp?.max} / ${daily.temp?.min}"
+                tvMaxMinTemp.text = "${daily.temp?.max?.toInt()} / ${daily.temp?.min?.toInt()} ${getTemperatureUnit(binding.root.context)}"
 
                 Glide
                     .with(binding.root)

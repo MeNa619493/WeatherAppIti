@@ -13,18 +13,24 @@ import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavoriteDetailsBinding
 import com.example.weatherapp.databinding.FragmentFavoritesBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.getTemperatureUnit
 import com.example.weatherapp.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FavoriteDetailsFragment : Fragment() {
 
     private var _binding: FragmentFavoriteDetailsBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
 
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
@@ -46,8 +52,8 @@ class FavoriteDetailsFragment : Fragment() {
         viewModel.getFavWeather(
             args.weather.lat.toString(),
             args.weather.lon.toString(),
-            "en",
-            "standard"
+            sharedPreferences.getString(Constants.UNIT, "metric"),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
         )
 
         observeWeatherResponse()
@@ -94,7 +100,7 @@ class FavoriteDetailsFragment : Fragment() {
 
                 }
             }
-            tvTemp.text = weatherResponse.current?.temp.toString()
+            tvTemp.text =  "${weatherResponse.current?.temp?.toInt()} ${getTemperatureUnit(requireContext())}"
             tvPressureDeg.text = weatherResponse.current?.pressure.toString()
             tvWindDeg.text = weatherResponse.current?.wind_speed.toString()
             tvHumidityDeg.text = weatherResponse.current?.humidity.toString()

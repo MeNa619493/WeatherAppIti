@@ -9,15 +9,12 @@ import androidx.work.*
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.ALERT_ID
 import com.example.weatherapp.utils.Constants.DESCRIPTION
 import com.example.weatherapp.utils.Constants.ICON
 import com.example.weatherapp.utils.Constants.getDateMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
 import java.util.*
 import java.util.concurrent.TimeUnit
 

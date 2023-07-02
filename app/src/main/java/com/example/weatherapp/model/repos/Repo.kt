@@ -17,8 +17,8 @@ interface Repo {
     suspend fun getCurrentWeather(
         lat: String,
         long: String,
-        language: String,
-        units: String
+        units: String,
+        language: String
     ): Response<WeatherResponse>
 
     suspend fun insertWeather(weatherResponse: WeatherResponse)

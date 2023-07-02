@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.weatherapp.ui.SettingsFragment"
+        android:name="com.example.weatherapp.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment

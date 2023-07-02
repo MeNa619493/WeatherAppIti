@@ -25,11 +25,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.databinding.FragmentHomeBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.METRIC
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +46,9 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
 
     private val hourlyAdapter by lazy { HourlyAdapter() }
     private val dailyAdapter by lazy { DailyAdapter() }
@@ -70,7 +75,12 @@ class HomeFragment : Fragment() {
         viewModel.locationLiveData.observe(viewLifecycleOwner) {
             Log.d(TAG, "onViewCreated: location is here")
             showAddress(it)
-            viewModel.getCurrentWeather("${it.latitude}", "${it.longitude}", "en", "standard")
+            viewModel.getCurrentWeather(
+                "${it.latitude}",
+                "${it.longitude}",
+                sharedPreferences.getString(Constants.UNIT, "metric"),
+                sharedPreferences.getString(Constants.LANGUAGE, "en")
+            )
         }
 
         observeWeatherResponse()
@@ -202,7 +212,7 @@ class HomeFragment : Fragment() {
 
                 }
             }
-            tvTemp.text = weatherResponse.current?.temp.toString()
+            tvTemp.text = "${weatherResponse.current?.temp?.toInt()} ${Constants.getTemperatureUnit(requireContext())}"
             tvPressureDeg.text = weatherResponse.current?.pressure.toString()
             tvWindDeg.text = weatherResponse.current?.wind_speed.toString()
             tvHumidityDeg.text = weatherResponse.current?.humidity.toString()
@@ -228,15 +238,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun showShimmer() {
         binding.apply {
+            tvAddress.visibility = View.GONE
+            tvDate.visibility = View.GONE
             llWeatherCard.visibility = View.GONE
             shimmerView.visibility = View.VISIBLE
+
             shimmerView.startShimmer()
         }
     }
@@ -246,7 +254,14 @@ class HomeFragment : Fragment() {
             shimmerView.stopShimmer()
             shimmerView.visibility = View.GONE
             llWeatherCard.visibility = View.VISIBLE
+            tvAddress.visibility = View.VISIBLE
+            tvDate.visibility = View.VISIBLE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

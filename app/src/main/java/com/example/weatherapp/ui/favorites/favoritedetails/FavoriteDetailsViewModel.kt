@@ -24,12 +24,12 @@ class FavoriteDetailsViewModel @Inject constructor(
     fun getFavWeather(
         lat: String,
         long: String,
-        language: String,
-        units: String
+        units: String,
+        language: String
     ) {
         _weather.value = NetworkResult.Loading()
         viewModelScope.launch {
-            val weatherResponse = repo.getCurrentWeather(lat, long, language, units)
+            val weatherResponse = repo.getCurrentWeather(lat, long, units, language)
             if (weatherResponse.isSuccessful) {
                 repo.addString(Constants.LAT, lat)
                 repo.addString(Constants.LONG, long)

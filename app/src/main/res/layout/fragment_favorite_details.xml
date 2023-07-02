@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_1"
+    android:layoutDirection="locale"
     tools:context=".ui.favorites.favoritedetails.FavoriteDetailsFragment">
 
     <LinearLayout
@@ -27,7 +28,7 @@
                 android:gravity="center"
                 android:paddingStart="-25dp"
                 android:paddingEnd="0dp"
-                android:text="Favourites"
+                android:text="@string/fav"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
@@ -134,7 +135,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pressure"
+                        android:text="@string/pressure"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -162,7 +163,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Wind"
+                        android:text="@string/wind"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -190,7 +191,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="humidity"
+                        android:text="@string/humidity"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -225,7 +226,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cloud"
+                        android:text="@string/cloud"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -253,7 +254,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Ultra Violet"
+                        android:text="@string/uv"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -281,7 +282,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Visibility"
+                        android:text="@string/visibility"
                         android:textAlignment="center"
                         android:textColor="@color/white" />
                 </LinearLayout>

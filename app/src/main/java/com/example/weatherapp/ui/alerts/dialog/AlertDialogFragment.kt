@@ -2,25 +2,20 @@ package com.example.weatherapp.ui.alerts.dialog
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.*
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.ui.alerts.SharedAlertViewModel
-import com.example.weatherapp.utils.Constants.ALERT_ID
 import com.example.weatherapp.utils.Constants.convertLongToTimePicker
 import com.example.weatherapp.utils.Constants.getDateMillis
-import com.example.weatherapp.workmanager.DailyWorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit

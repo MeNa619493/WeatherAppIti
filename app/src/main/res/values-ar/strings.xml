@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">الطقس</string>
+    <string name="api_key">AIzaSyBGI2WXOfhW1SUamL5p6tGL1CgcgwrWNFc</string>
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="cloud">الرياح</string>
+    <string name="pressure">الضغط</string>
+    <string name="wind">سرعة الرياح</string>
+    <string name="uv">الأشعة فوق البنفسجية</string>
+    <string name="visibility">مدي الرؤية</string>
+    <string name="fav">التفضيلات</string>
+    <string name="alert">التنبيهات</string>
+    <string name="settings">الاعدادات</string>
+    <string name="location">الموقع</string>
+    <string name="gps">نظام تحديد المواقع</string>
+    <string name="map">الخريطة</string>
+    <string name="language">اللغة</string>
+    <string name="english">الانجليزية</string>
+    <string name="arabic">العربية</string>
+    <string name="save">حفظ</string>
+    <string name="weather_alert">تنبية الطقس</string>
+    <string name="dismiss">الغاء</string>
+    <string name="from">من</string>
+    <string name="to">الي</string>
+    <string name="alarm">تنبية</string>
+    <string name="ok">تم</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="meter_sec">متر/ساعة</string>
+    <string name="miles_hour">ميل/ثانية</string>
+
+    <string name="celsius">سيليزيوس</string>
+    <string name="kelvin">كيلفن</string>
+    <string name="fahrenheit">فهرنهايت</string>
+
+    <string name="hpa"> ه.ب.أ</string>
+    <string name="m_s">م/ث</string>
+    <string name="m_h">ميل/ساعة</string>
+    <string name="c">س ْ</string>
+    <string name="f">ف ْ</string>
+    <string name="k">ك ْ</string>
+
+    <string name="units">الوحدات</string>
+    <string name="c_with_wind_speed_m_sec">سيلزيوس وسرعة الرياح متر/ثانية</string>
+    <string name="f_with_wind_speed_mile_hr">فهرنهايت و سرعة الرياح ميل/ساعة</string>
+    <string name="k_with_wind_speed_m_sec">كيلفن وسرعة الرياح متر/ثانية</string>
+</resources>

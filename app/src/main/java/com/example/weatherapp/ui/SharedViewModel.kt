@@ -66,12 +66,12 @@ class SharedViewModel @Inject constructor(
     fun getCurrentWeather(
         lat: String,
         long: String,
-        language: String,
-        units: String
+        units: String,
+        language: String
     ) {
         _weather.value = NetworkResult.Loading()
         viewModelScope.launch {
-            val weatherResponse = repo.getCurrentWeather(lat, long, language, units)
+            val weatherResponse = repo.getCurrentWeather(lat, long, units, language)
             if (weatherResponse.isSuccessful) {
                 repo.addString(Constants.LAT, lat)
                 repo.addString(Constants.LONG, long)
@@ -88,19 +88,19 @@ class SharedViewModel @Inject constructor(
     fun saveFavLocationWeather(
         lat: String,
         long: String,
-        language: String,
         units: String,
+        language: String,
         address: String
     ) {
         viewModelScope.launch {
-            val weatherResponse = repo.getCurrentWeather(lat, long, language, units)
+            val weatherResponse = repo.getCurrentWeather(lat, long, units,language)
             if (weatherResponse.isSuccessful) {
                 weatherResponse.body()?.let {
                     it.location = address
                     repo.insertWeather(it)
                 }
             } else {
-                Log.e("MealsViewModel", weatherResponse.errorBody().toString())
+                Log.e("SharedViewModel", weatherResponse.errorBody().toString())
             }
         }
     }

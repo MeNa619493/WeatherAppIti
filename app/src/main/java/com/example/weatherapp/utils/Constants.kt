@@ -1,5 +1,9 @@
 package com.example.weatherapp.utils
 
+import android.content.Context
+import android.os.Build
+import com.example.weatherapp.R
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -9,11 +13,16 @@ object Constants {
     const val DATABASE_NAME = "WeatherDatabase"
     const val FIRST_TIME = "first"
     const val IS_MAP = "map"
-    const val ALERT_ID = "id"
     const val DESCRIPTION = "description"
     const val ICON = "icon"
     const val LAT = "lat"
     const val LONG = "long"
+    const val LANGUAGE = "language"
+    const val UNIT = "unit"
+
+    const val METRIC = "metric"
+    const val IMPERIAL = "imperial"
+    const val STANDARD = "standard"
 
     const val NOTIFICATION_NAME: String = "Weather"
     const val NOTIFICATION_CHANNEL: String = "Weather_channel_01"
@@ -49,5 +58,40 @@ object Constants {
         val date = Date(time-7200000)
         val format = SimpleDateFormat("h:mm aa")
         return format.format(date)
+    }
+
+    fun getCurrentLocale(context: Context): Locale? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.resources.configuration.locales[0]
+        } else {
+            context.resources.configuration.locale
+        }
+    }
+
+    fun getSpeedUnit(context: Context): String {
+        val sharedPreference = HelperSharedPreferences(context)
+        return when (sharedPreference.getString( UNIT , METRIC))  {
+            IMPERIAL -> {
+                context.getString(R.string.m_h)
+            }
+            else -> {
+                context.getString(R.string.m_s)
+            }
+        }
+    }
+
+    fun getTemperatureUnit(context: Context): String {
+        val sharedPreference = HelperSharedPreferences(context)
+        return when (sharedPreference.getString( UNIT , METRIC)) {
+            IMPERIAL -> {
+                context.getString(R.string.f)
+            }
+            STANDARD -> {
+                context.getString(R.string.k)
+            }
+            else -> {
+                context.getString(R.string.c)
+            }
+        }
     }
 }
