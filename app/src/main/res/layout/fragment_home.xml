@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,27 +27,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <View
                     android:id="@+id/shimmer_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="25dp"
+                    android:background="@color/placeholder"
                     android:layout_marginTop="16dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:text="address" />
+                    android:layout_gravity="center" />
 
-                <TextView
+                <View
                     android:id="@+id/shimmer_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="25dp"
+                    android:background="@color/placeholder"
                     android:layout_marginTop="8dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:text="date" />
+                    android:layout_gravity="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,12 +56,12 @@
                         android:orientation="horizontal"
                         android:weightSum="1">
 
-                        <ImageView
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="150dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="0.5"
-                            tools:srcCompat="@drawable/cloudy_sunny" />
+                            android:background="@color/placeholder"
+                            android:layout_weight="0.5" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -75,23 +70,20 @@
                             android:layout_weight="0.5"
                             android:orientation="vertical">
 
-                            <TextView
+                            <View
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="25dp"
+                                android:layout_marginHorizontal="16dp"
                                 android:layout_marginTop="8dp"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="20sp"
-                                tools:text="mostly cloudy" />
+                                android:background="@color/placeholder"
+                                android:layout_gravity="center"/>
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                            <View
+                                android:layout_width="100dp"
+                                android:layout_height="50dp"
                                 android:layout_marginTop="4dp"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="44sp"
-                                tools:text="25" />
+                                android:background="@color/placeholder"
+                                android:layout_gravity="center" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -101,86 +93,26 @@
                         android:orientation="horizontal"
                         android:weightSum="3">
 
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_baseline_pressure_24" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="23%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Pressure"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/wind" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="23%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Wind"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/humidity" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="18%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="humidity"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -189,86 +121,26 @@
                         android:orientation="horizontal"
                         android:weightSum="3">
 
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_baseline_cloud_24" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="23%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Cloud"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
 
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_baseline_ray_24" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="23%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Ultra Violet"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
-
-                        <LinearLayout
+                        <View
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="75dp"
                             android:layout_margin="16dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:srcCompat="@drawable/ic_baseline_visibility_24" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                tools:text="18%" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Visibility"
-                                android:textAlignment="center"
-                                android:textColor="@color/white" />
-                        </LinearLayout>
+                            android:background="@color/placeholder"
+                            android:layout_weight="1" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -541,6 +413,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp" />
+
+        <ImageView
+            android:id="@+id/iv_no_connection"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="150dp"
+            android:src="@drawable/ic_baseline_no_internet_24"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_no_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/no_connection"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 

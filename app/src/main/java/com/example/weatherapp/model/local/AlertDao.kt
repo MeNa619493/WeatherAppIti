@@ -14,5 +14,5 @@ interface AlertDao {
     fun getAllAerts(): Flow<List<WeatherAlert>>
 
     @Delete
-    suspend fun deleteAlert(weatherAlert: WeatherAlert)
+    suspend fun deleteAlert(weatherAlert: WeatherAlert): Int
 }

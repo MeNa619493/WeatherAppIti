@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.favorites.allfavorites
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,8 +8,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.FavItemBinding
 import com.example.weatherapp.model.pojo.WeatherResponse
+import com.example.weatherapp.utils.Constants
 
-class FavoritesAdapter(private val clickListener: WeatherResponseClickListener) : ListAdapter<WeatherResponse, FavoritesAdapter.MyViewHolder>(
+class FavoritesAdapter(
+    private val context: Context,
+    private val language: String,
+    private val clickListener: WeatherResponseClickListener
+) : ListAdapter<WeatherResponse, FavoritesAdapter.MyViewHolder>(
     WeatherResponseDiffCallback()
 ) {
 
@@ -17,7 +23,7 @@ class FavoritesAdapter(private val clickListener: WeatherResponseClickListener) 
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener)
+        holder.bind(getItem(position), clickListener, context, language)
     }
 
     interface WeatherResponseClickListener {
@@ -28,11 +34,11 @@ class FavoritesAdapter(private val clickListener: WeatherResponseClickListener) 
     class MyViewHolder(private val binding: FavItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(weatherResponse: WeatherResponse, clickListener: WeatherResponseClickListener) {
+        fun bind(weatherResponse: WeatherResponse, clickListener: WeatherResponseClickListener, context: Context, language: String) {
             binding.apply {
-                tvLocation.text = weatherResponse.location
+                tvLocation.text = Constants.getAddress(context, weatherResponse.lat ?:0.0, weatherResponse.lon ?:0.0, language)
 
-                layout.setOnClickListener{
+                layout.setOnClickListener {
                     clickListener.onItemClicked(weatherResponse)
                 }
 
@@ -56,7 +62,10 @@ class FavoritesAdapter(private val clickListener: WeatherResponseClickListener) 
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: WeatherResponse, newItem: WeatherResponse): Boolean {
+        override fun areContentsTheSame(
+            oldItem: WeatherResponse,
+            newItem: WeatherResponse
+        ): Boolean {
             return oldItem == newItem
         }
     }

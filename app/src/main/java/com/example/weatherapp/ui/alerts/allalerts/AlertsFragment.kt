@@ -13,29 +13,51 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentAlertsBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.pojo.WeatherAlert
+import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.alerts.SharedAlertViewModel
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.workmanager.DailyWorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class AlertsFragment : Fragment() {
 
     private lateinit var viewModel: SharedAlertViewModel
+    private lateinit var snackbar: Snackbar
 
     private var _binding: FragmentAlertsBinding? = null
     private val binding get() = _binding!!
 
-    private val alertsAdapter by lazy { AlertsAdapter() }
+    @Inject
+    lateinit var networkChangeListener: NetworkListener
+
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
+
+    private val alertsAdapter by lazy {
+        AlertsAdapter(sharedPreferences.getString(Constants.LANGUAGE, "en"),
+            object : AlertsAdapter.AlertClickListener {
+                override fun onDeleteItemClicked(weatherAlert: WeatherAlert) {
+                    showAlertDialog(weatherAlert)
+                }
+            })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,37 +68,107 @@ class AlertsFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[SharedAlertViewModel::class.java]
 
         setupAlertsRecyclerView()
-
-        viewModel.getAllAlerts().observe(viewLifecycleOwner) {
-            alertsAdapter.submitList(it)
-        }
+        observeAllAlerts()
+        observeNetworkState()
 
         binding.floatingActionButton.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                showDialog()
-            } else {
-                navigateToSetTimeDialog()
-            }
+            showDialog()
         }
 
-        viewModel.alertId.observe(viewLifecycleOwner) {
-            Log.e("AlertDialogFragment", "observe alertId")
+        viewModel.addAlertId.observe(viewLifecycleOwner) { id ->
+            Log.e("AlertDialogFragment", "observe add alertId = $id")
             setDailyWorkManger()
         }
+
+        viewModel.deleteAlertId.observe(viewLifecycleOwner) { id ->
+            Log.e("AlertDialogFragment", "observe delete alertId = $id")
+            WorkManager.getInstance(requireContext()).cancelUniqueWork("$id")
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            LocalBroadcastManager.getInstance(it).unregisterReceiver(networkChangeListener)
+        }
+    }
+
+    private fun observeNetworkState() {
+        NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it) {
+                hideSnackbar()
+            } else {
+                showSnackbar()
+            }
+        }
+    }
+
+    private fun showSnackbar() {
+        val rootView = activity?.findViewById<View>(android.R.id.content)
+        snackbar =
+            Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
+        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.bottomMargin =
+            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+        snackbar.view.layoutParams = layoutParams
+        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
+        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
+        snackbar.show()
+    }
+
+    private fun hideSnackbar() {
+        if (this::snackbar.isInitialized) {
+            snackbar.dismiss()
+        }
+    }
+
+    private fun observeAllAlerts() {
+        viewModel.getAllAlerts().observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
+                binding.apply {
+                    rvAlerts.visibility = View.GONE
+                    ivNoData.visibility = View.VISIBLE
+                    tvNoData.visibility = View.VISIBLE
+                }
+            } else {
+                binding.apply {
+                    rvAlerts.visibility = View.VISIBLE
+                    ivNoData.visibility = View.GONE
+                    tvNoData.visibility = View.GONE
+                }
+                alertsAdapter.submitList(it)
+            }
+        }
+    }
+
+    private fun showAlertDialog(weatherAlert: WeatherAlert) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Alert")
+        builder.setMessage("Are you sure you want to delete this item ?")
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+        builder.setPositiveButton("Yes") { _, _ ->
+            viewModel.deleteAlert(weatherAlert)
+        }
+        builder.setNegativeButton("Cancel") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(false)
+        alertDialog.show()
     }
 
     private fun navigateToSetTimeDialog() {
         findNavController().navigate(AlertsFragmentDirections.actionAlertsFragmentToAlertDialogFragment())
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun showDialog() {
         if (checkPermission()) {
             navigateToSetTimeDialog()
@@ -85,11 +177,8 @@ class AlertsFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun checkPermission() = Settings.canDrawOverlays(requireContext())
 
-
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun requestPermission() {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
         alertDialogBuilder.setTitle("Alert")
@@ -125,8 +214,8 @@ class AlertsFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == PERMISSION_ID){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 navigateToSetTimeDialog()
             }
         }
@@ -144,7 +233,7 @@ class AlertsFragment : Fragment() {
             .build()
 
         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            "0",
+            "daily",
             ExistingPeriodicWorkPolicy.REPLACE,
             periodicWorkRequest
         )

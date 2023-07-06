@@ -46,7 +46,6 @@ class WeatherDaoTest {
         val weather = WeatherResponse(
             1,
             null,
-            null,
             listOf<Daily>(),
             listOf<Hourly>(),
             null,
@@ -69,7 +68,6 @@ class WeatherDaoTest {
         val weather1 = WeatherResponse(
             1,
             null,
-            null,
             listOf<Daily>(),
             listOf<Hourly>(),
             null,
@@ -80,7 +78,6 @@ class WeatherDaoTest {
         )
         val weather2 = WeatherResponse(
             2,
-            null,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -108,7 +105,6 @@ class WeatherDaoTest {
         val weather1 = WeatherResponse(
             1,
             null,
-            null,
             listOf<Daily>(),
             listOf<Hourly>(),
             null,
@@ -119,7 +115,6 @@ class WeatherDaoTest {
         )
         val weather2 = WeatherResponse(
             2,
-            null,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),

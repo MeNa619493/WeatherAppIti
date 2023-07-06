@@ -10,4 +10,6 @@
 
     <color name="bg_1">#161c2a</color>
     <color name="bg_2">#1a2332</color>
+
+    <color name="placeholder">#D1D1D1</color>
 </resources>

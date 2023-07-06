@@ -12,13 +12,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentAlertDialogBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.ui.alerts.SharedAlertViewModel
+import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.convertLongToTimePicker
 import com.example.weatherapp.utils.Constants.getDateMillis
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AlertDialogFragment : DialogFragment() {
@@ -32,6 +35,9 @@ class AlertDialogFragment : DialogFragment() {
     private var endDate: Long = 0
 
     private lateinit var viewModel: SharedAlertViewModel
+
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -97,10 +103,10 @@ class AlertDialogFragment : DialogFragment() {
                     val date = "$day/${month + 1}/$year"
                     if (isFrom) {
                         binding.dateFrom.text = date
-                        startDate = getDateMillis(date)
+                        startDate = getDateMillis(date, sharedPreferences.getString(Constants.LANGUAGE, "en"))
                     } else {
                         binding.dateTo.text = date
-                        endDate = getDateMillis(date)
+                        endDate = getDateMillis(date, sharedPreferences.getString(Constants.LANGUAGE, "en"))
                     }
                 }
             }
@@ -125,10 +131,10 @@ class AlertDialogFragment : DialogFragment() {
                     val time =
                         (TimeUnit.MINUTES.toMillis(minute.toLong()) + TimeUnit.HOURS.toMillis(hour.toLong()))
                     if (isFrom) {
-                        binding.hourFrom.text = convertLongToTimePicker(time)
+                        binding.hourFrom.text = convertLongToTimePicker(time, sharedPreferences.getString(Constants.LANGUAGE, "en"))
                         timeFrom = time
                     } else {
-                        binding.hourTo.text = convertLongToTimePicker(time)
+                        binding.hourTo.text = convertLongToTimePicker(time, sharedPreferences.getString(Constants.LANGUAGE, "en"))
                         timeTo = time
                     }
                 }

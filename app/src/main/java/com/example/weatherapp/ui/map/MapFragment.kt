@@ -19,6 +19,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.databinding.FragmentMapBinding
 import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.pojo.UserLocation
 import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.utils.Constants
 import com.google.android.gms.common.api.Status
@@ -54,7 +55,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var selectedLocation: Location
     private val args: MapFragmentArgs by navArgs()
-    private lateinit var geoCoder: Geocoder
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,17 +78,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-        geoCoder = Geocoder(requireContext())
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.favLocationState.collect {
-                    if (it.provider != "start") {
-                        getAddress(it)
-                    }
-                }
-            }
-        }
 
         binding.btnDone.setOnClickListener {
             onLocationSelected()
@@ -103,7 +92,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     private fun observeUserCurrentLocation() {
         viewModel.locationLiveData.observe(viewLifecycleOwner) {
-            setUserLocation(it.latitude, it.longitude)
+            setUserLocation(it.lat, it.lon)
         }
     }
 
@@ -129,6 +118,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             selectedLocation.latitude = location.latitude
             binding.btnDone.visibility = View.VISIBLE
         }
+    }
+
+    private fun onLocationSelected() {
+        if (this::selectedLocation.isInitialized) {
+            val location = UserLocation(selectedLocation.latitude, selectedLocation.longitude)
+            if (args.isFav) {
+                saveFavLocation(location)
+            } else {
+                sharedPreferences.addString(Constants.LAT, location.lat.toString())
+                sharedPreferences.addString(Constants.LONG, location.lon.toString())
+                viewModel.locationLiveData.value = location
+            }
+        }
+        findNavController().popBackStack()
+    }
+
+    private fun saveFavLocation(location: UserLocation) {
+        viewModel.saveFavLocationWeather(
+            "${location.lat}",
+            "${location.lon}",
+            sharedPreferences.getString(Constants.UNIT, "metric"),
+            sharedPreferences.getString(Constants.LANGUAGE, "en"),
+            )
     }
 
     private fun addAutoComplete() {
@@ -176,38 +188,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Log.i(TAG, "An error occurred: $status")
             }
         })
-    }
-
-    private fun onLocationSelected() {
-        if (this::selectedLocation.isInitialized) {
-            if (args.isFav) {
-                viewModel.favLocationState.value = selectedLocation
-            } else {
-                viewModel.locationLiveData.value = selectedLocation
-            }
-        }
-        findNavController().popBackStack()
-    }
-
-    private fun getAddress(location: Location) {
-        try {
-            val addressList = geoCoder.getFromLocation(
-                location.latitude,
-                location.longitude,
-                1
-            )
-            addressList?.let {
-                viewModel.saveFavLocationWeather(
-                    "${location.latitude}",
-                    "${location.longitude}",
-                    sharedPreferences.getString(Constants.UNIT, "metric"),
-                    sharedPreferences.getString(Constants.LANGUAGE, "en"),
-                    "${it[0].countryName}, ${it[0].adminArea}"
-                )
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
     }
 
     override fun onDestroyView() {

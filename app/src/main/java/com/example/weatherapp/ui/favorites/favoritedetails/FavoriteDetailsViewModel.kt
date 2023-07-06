@@ -31,8 +31,6 @@ class FavoriteDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val weatherResponse = repo.getCurrentWeather(lat, long, units, language)
             if (weatherResponse.isSuccessful) {
-                repo.addString(Constants.LAT, lat)
-                repo.addString(Constants.LONG, long)
                 weatherResponse.body()?.let {
                     _weather.postValue(NetworkResult.Success(it))
                 }

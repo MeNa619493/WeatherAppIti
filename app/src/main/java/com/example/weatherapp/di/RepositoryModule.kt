@@ -22,9 +22,8 @@ object RepositoryModule {
         apiService: ApiService,
         weatherDao: WeatherDao,
         alertDao: AlertDao,
-        sharedPreferences: HelperSharedPreferences
     ): Repo {
-        return RepoImpl(apiService, weatherDao, alertDao, sharedPreferences)
+        return RepoImpl(apiService, weatherDao, alertDao)
     }
 
 }

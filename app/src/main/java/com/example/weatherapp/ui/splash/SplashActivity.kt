@@ -7,8 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
-import androidx.activity.viewModels
-import com.example.weatherapp.MainActivity
+import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.ui.dialog.ChooseDialogFragment
@@ -28,9 +27,10 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            if (sharedPreferences.getBoolean(Constants.FIRST_TIME, true)){
+            if (isFirstTime()){
                 if (!supportFragmentManager.isDestroyed) {
-                    ChooseDialogFragment().show(supportFragmentManager, "FirstTime")
+                    setIsFirstTime()
+                    ChooseDialogFragment().show(supportFragmentManager, "dialog")
                 }
             } else {
                 setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"))
@@ -58,5 +58,13 @@ class SplashActivity : AppCompatActivity() {
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun isFirstTime(): Boolean {
+        return sharedPreferences.getBoolean(Constants.FIRST_TIME, true)
+    }
+
+    private fun setIsFirstTime() {
+        sharedPreferences.addBoolean(Constants.FIRST_TIME, false)
     }
 }

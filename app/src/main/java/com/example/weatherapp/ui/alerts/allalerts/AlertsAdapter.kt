@@ -7,10 +7,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.ItemAlarmBinding
 import com.example.weatherapp.model.pojo.WeatherAlert
+import com.example.weatherapp.model.pojo.WeatherResponse
+import com.example.weatherapp.ui.favorites.allfavorites.FavoritesAdapter
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.convertLongToDayDateAlert
 
-class AlertsAdapter() : ListAdapter<WeatherAlert, AlertsAdapter.MyViewHolder>(
+class AlertsAdapter(
+    private val language: String,
+    private val clickListener: AlertClickListener
+) : ListAdapter<WeatherAlert, AlertsAdapter.MyViewHolder>(
     AlertsDiffCallback()
 ) {
 
@@ -19,19 +24,26 @@ class AlertsAdapter() : ListAdapter<WeatherAlert, AlertsAdapter.MyViewHolder>(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener, language)
     }
 
+    interface AlertClickListener {
+        fun onDeleteItemClicked(weatherAlert: WeatherAlert)
+    }
 
     class MyViewHolder(private val binding: ItemAlarmBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(weatherAlert: WeatherAlert) {
+        fun bind(weatherAlert: WeatherAlert, clickListener: AlertClickListener, language: String) {
             binding.apply {
-                dateFrom.text = convertLongToDayDateAlert(weatherAlert.startDate)
-                dateTo.text = convertLongToDayDateAlert(weatherAlert.endDate)
-                hourFrom.text = Constants.convertLongToTimePicker(weatherAlert.timeFrom)
-                hourTo.text = Constants.convertLongToTimePicker(weatherAlert.timeTo)
+                dateFrom.text = convertLongToDayDateAlert(weatherAlert.startDate, language)
+                dateTo.text = convertLongToDayDateAlert(weatherAlert.endDate, language)
+                hourFrom.text = Constants.convertLongToTimePicker(weatherAlert.timeFrom, language)
+                hourTo.text = Constants.convertLongToTimePicker(weatherAlert.timeTo, language)
+
+                ivDelete.setOnClickListener {
+                    clickListener.onDeleteItemClicked(weatherAlert)
+                }
             }
         }
 

@@ -1,10 +1,11 @@
-package com.example.weatherapp
+package com.example.weatherapp.ui
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setupWithNavController(binding.navigationBar, navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if(destination.id == R.id.mapFragment) {
+            if(destination.id == R.id.mapFragment || destination.id == R.id.favoriteDetailsFragment ) {
                 binding.navigationBar.visibility = View.GONE
             } else {
                 binding.navigationBar.visibility  = View.VISIBLE

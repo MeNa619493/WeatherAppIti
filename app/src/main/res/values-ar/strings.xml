@@ -45,4 +45,10 @@
     <string name="c_with_wind_speed_m_sec">سيلزيوس وسرعة الرياح متر/ثانية</string>
     <string name="f_with_wind_speed_mile_hr">فهرنهايت و سرعة الرياح ميل/ساعة</string>
     <string name="k_with_wind_speed_m_sec">كيلفن وسرعة الرياح متر/ثانية</string>
+
+    <string name="hourly">%1$d %2$s</string>
+    <string name="daily">%1$d / %2$d %3$s</string>
+    <string name="no_favorites_found">لا يوجد تفضيلات</string>
+    <string name="no_alerts_found">لا يوجد تنبيهات</string>
+    <string name="no_connection">يرجى التحقق من اتصالك بالانترنت وأعد المحاولة مرة أخرى</string>
 </resources>

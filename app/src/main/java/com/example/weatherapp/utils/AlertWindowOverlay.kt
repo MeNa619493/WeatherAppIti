@@ -20,11 +20,8 @@ class AlertWindowOverlay(
 
     fun setAlertWindowManger() {
         Log.e("setAlertWindowManger", "AlertWindowOverlay")
-        val layoutParamsType: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val layoutParamsType: Int =
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
 
         val params = WindowManager.LayoutParams(
             (context.resources.displayMetrics.widthPixels * 0.90).toInt(),
@@ -65,7 +62,6 @@ class AlertWindowOverlay(
     private fun removeDialog() {
         if (this::dialogView.isInitialized) {
             windowManager.removeView(dialogView)
-            (dialogView.parent as ViewGroup).removeAllViews()
         }
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.utils.Constants
@@ -18,12 +19,12 @@ import kotlinx.coroutines.flow.first
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltWorker
 class DailyWorkManager @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
-    private val repo: Repo
+    private val repo: Repo,
+    private val sharedPreferences: HelperSharedPreferences
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -34,8 +35,8 @@ class DailyWorkManager @AssistedInject constructor(
 
     private suspend fun getTodayAlerts() {
         val weatherResponse = repo.getCurrentWeather(
-            repo.getString(Constants.LAT, "0.0"),
-            repo.getString(Constants.LONG, "0.0"),
+            sharedPreferences.getString(Constants.LAT, "0.0"),
+            sharedPreferences.getString(Constants.LONG, "0.0"),
             "en",
             "standard"
         )
@@ -72,7 +73,7 @@ class DailyWorkManager @AssistedInject constructor(
         val month = Calendar.getInstance().get(Calendar.MONTH)
         val day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val date = "$day/${month + 1}/$year"
-        val currentDay = getDateMillis(date)
+        val currentDay = getDateMillis(date, "en")
         return currentDay >= alert.startDate && currentDay <= alert.endDate
     }
 
@@ -106,6 +107,5 @@ class DailyWorkManager @AssistedInject constructor(
 
         Log.e("setHourlyWorkManger", "oneTimeWorkRequest done")
     }
-
 
 }

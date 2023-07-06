@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
-import com.example.weatherapp.MainActivity
+import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentChooseDialogBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseDialogFragment : DialogFragment()  {
@@ -20,7 +21,8 @@ class ChooseDialogFragment : DialogFragment()  {
     private var _binding: FragmentChooseDialogBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: DialogViewModel by viewModels()
+    @Inject
+    lateinit var sharedPreferences: HelperSharedPreferences
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         dialog!!.window?.setBackgroundDrawableResource(R.drawable.round_corner);
@@ -34,9 +36,9 @@ class ChooseDialogFragment : DialogFragment()  {
 
         binding.btnOk.setOnClickListener {
             if (binding.radioGroup.checkedRadioButtonId == R.id.radio_gps) {
-                viewModel.putIsMapBoolean(Constants.IS_MAP, false)
+                sharedPreferences.addBoolean(Constants.IS_MAP, false)
             } else if (binding.radioGroup.checkedRadioButtonId == R.id.radio_maps) {
-                viewModel.putIsMapBoolean(Constants.IS_MAP, true)
+                sharedPreferences.addBoolean(Constants.IS_MAP, true)
             }
             startMainActivity()
         }

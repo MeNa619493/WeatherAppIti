@@ -13,23 +13,7 @@ class RepoImpl(
     private val apiService: ApiService,
     private val weatherDao: WeatherDao,
     private val alertDao: AlertDao,
-    private val sharedPreferences: HelperSharedPreferences
 ) : Repo {
-    override fun addBoolean(key: String, value: Boolean) {
-        sharedPreferences.addBoolean(key, value)
-    }
-
-    override fun getBoolean(key: String, defaultValue: Boolean): Boolean {
-        return sharedPreferences.getBoolean(key, defaultValue)
-    }
-
-    override fun addString(key: String, value: String) {
-        sharedPreferences.addString(key, value)
-    }
-
-    override fun getString(key: String, defaultValue: String): String {
-        return sharedPreferences.getString(key, defaultValue)
-    }
 
     override suspend fun getCurrentWeather(
         lat: String,
@@ -60,7 +44,7 @@ class RepoImpl(
         return alertDao.getAllAerts()
     }
 
-    override suspend fun deleteAlert(weatherAlert: WeatherAlert) {
-        alertDao.deleteAlert(weatherAlert)
+    override suspend fun deleteAlert(weatherAlert: WeatherAlert): Int {
+        return alertDao.deleteAlert(weatherAlert)
     }
 }

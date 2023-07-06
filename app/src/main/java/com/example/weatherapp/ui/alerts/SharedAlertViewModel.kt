@@ -12,17 +12,25 @@ class SharedAlertViewModel @Inject constructor(
     private val repo: Repo
 ) : ViewModel() {
 
-    private val _alertId: MutableLiveData<Int> = MutableLiveData()
-    val alertId: LiveData<Int> = _alertId
+    private val _addAlertId: MutableLiveData<Int> = MutableLiveData()
+    val addAlertId: LiveData<Int> = _addAlertId
+
+    private val _deleteAlertId: MutableLiveData<Int> = MutableLiveData()
+    val deleteAlertId: LiveData<Int> = _deleteAlertId
 
     fun saveWeatherAlert(weatherAlert: WeatherAlert) {
         viewModelScope.launch {
             val id = repo.insertAlert(weatherAlert)
-            _alertId.postValue(id.toInt())
+            _addAlertId.postValue(id.toInt())
         }
     }
 
     fun getAllAlerts() : LiveData<List<WeatherAlert>> {
         return repo.getAllAerts().asLiveData()
+    }
+
+    fun deleteAlert(weatherAlert: WeatherAlert) = viewModelScope.launch {
+        val id = repo.deleteAlert(weatherAlert)
+        _deleteAlertId.postValue(id)
     }
 }

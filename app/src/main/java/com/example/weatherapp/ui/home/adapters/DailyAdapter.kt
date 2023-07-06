@@ -1,18 +1,20 @@
 package com.example.weatherapp.ui.home.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemDailyBinding
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.Daily
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
 
-class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
+class DailyAdapter(private val context: Context, private val language: String)  : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
     DailyDiffCallback()
 ) {
 
@@ -21,19 +23,26 @@ class DailyAdapter : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), context, language)
     }
 
     class MyViewHolder(private val binding: ItemDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(daily: Daily) {
+        fun bind(daily: Daily, context: Context, language: String) {
             binding.apply {
                 daily.dt?.let {
-                    tvDay.text = Constants.convertLongToDayName(it)
+                    tvDay.text = Constants.convertLongToDayName(it, language)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
-                tvMaxMinTemp.text = "${daily.temp?.max?.toInt()} / ${daily.temp?.min?.toInt()} ${getTemperatureUnit(binding.root.context)}"
+
+                val strFormat: String = context.getString(
+                    R.string.daily,
+                    daily.temp?.max?.toInt(),
+                    daily.temp?.min?.toInt(),
+                    getTemperatureUnit(context)
+                )
+                tvMaxMinTemp.text = strFormat
 
                 Glide
                     .with(binding.root)

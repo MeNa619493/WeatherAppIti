@@ -40,7 +40,7 @@
             android:layout_margin="8dp"
             android:textAlignment="center"
             android:textSize="14sp"
-            android:text="text"/>
+            android:text="@string/hourly"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

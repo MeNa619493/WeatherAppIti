@@ -46,4 +46,10 @@
     <string name="c_with_wind_speed_m_sec">C° with wind speed m/sec</string>
     <string name="f_with_wind_speed_mile_hr">F° with wind speed mile/hr</string>
     <string name="k_with_wind_speed_m_sec">K° with wind speed m/sec</string>
+
+    <string name="hourly">%1$d %2$s</string>
+    <string name="daily">%1$d / %2$d %3$s</string>
+    <string name="no_favorites_found">No Favorites Founded</string>
+    <string name="no_alerts_found">No Alerts Founded</string>
+    <string name="no_connection">Please, check your connection and try again</string>
 </resources>

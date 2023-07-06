@@ -5,6 +5,7 @@ import android.location.Location
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.weatherapp.model.pojo.UserLocation
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.ui.home.HomeFragment
@@ -23,22 +24,17 @@ class SharedViewModel @Inject constructor(
     private val mFusedLocationProviderClient: FusedLocationProviderClient
 ) : ViewModel() {
 
-    val locationLiveData: MutableLiveData<Location> = MutableLiveData()
-
-    val favLocationState: MutableStateFlow<Location> = MutableStateFlow(Location("start"))
+    val locationLiveData: MutableLiveData<UserLocation> = MutableLiveData()
 
     private val _weather: MutableLiveData<NetworkResult<WeatherResponse>> = MutableLiveData()
     val weather: LiveData<NetworkResult<WeatherResponse>> = _weather
-
-    fun getIsMapBoolean(key: String, defaultValue: Boolean): Boolean {
-        return repo.getBoolean(key, defaultValue)
-    }
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             val myLocation = locationResult.lastLocation
             myLocation?.let {
-                locationLiveData.value = it
+                val location = UserLocation(it.latitude, it.longitude)
+                locationLiveData.value = location
             }
             stopLocationUpdates()
         }
@@ -73,8 +69,6 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             val weatherResponse = repo.getCurrentWeather(lat, long, units, language)
             if (weatherResponse.isSuccessful) {
-                repo.addString(Constants.LAT, lat)
-                repo.addString(Constants.LONG, long)
                 weatherResponse.body()?.let {
                     _weather.postValue(NetworkResult.Success(it))
                 }
@@ -90,13 +84,11 @@ class SharedViewModel @Inject constructor(
         long: String,
         units: String,
         language: String,
-        address: String
     ) {
         viewModelScope.launch {
-            val weatherResponse = repo.getCurrentWeather(lat, long, units,language)
+            val weatherResponse = repo.getCurrentWeather(lat, long, units, language)
             if (weatherResponse.isSuccessful) {
                 weatherResponse.body()?.let {
-                    it.location = address
                     repo.insertWeather(it)
                 }
             } else {
@@ -105,13 +97,18 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun getAllFavs() : LiveData<List<WeatherResponse>> {
+    fun addFavLocation(weatherResponse: WeatherResponse) =
+        viewModelScope.launch {
+            repo.insertWeather(weatherResponse)
+        }
+
+    fun getAllFavs(): LiveData<List<WeatherResponse>> {
         return repo.getAllWeather().asLiveData()
     }
 
-    fun deleteFav(weatherResponse: WeatherResponse) {
+    fun deleteFav(weatherResponse: WeatherResponse) =
         viewModelScope.launch {
             repo.deleteWeather(weatherResponse)
         }
-    }
+
 }
