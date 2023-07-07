@@ -17,6 +17,7 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingsBinding
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -46,6 +47,11 @@ class SettingsFragment : Fragment() {
 
     private lateinit var nav: BottomNavigationView
     private lateinit var snackbar: Snackbar
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,7 +91,7 @@ class SettingsFragment : Fragment() {
                 changeLocationData()
             }
 
-            setLocale(selectedLanguageSetting)
+            setLocale(selectedLanguageSetting, requireContext())
             nav.selectedItemId = R.id.homeFragment
         }
 
@@ -143,17 +149,6 @@ class SettingsFragment : Fragment() {
             true -> binding.radioSettingMap.isChecked = true
             false -> binding.radioSettingGps.isChecked = true
         }
-    }
-
-    private fun setLocale(lang: String) {
-        val myLocale = Locale(lang)
-        Locale.setDefault(myLocale)
-        val res: Resources = resources
-        val dm: DisplayMetrics = res.displayMetrics
-        val conf: Configuration = res.configuration
-        conf.locale = myLocale
-        conf.setLayoutDirection(myLocale)
-        res.updateConfiguration(conf, dm)
     }
 
     private fun getUnitsSettings() {

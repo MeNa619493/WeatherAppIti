@@ -61,6 +61,11 @@ class FavoritesFragment : Fragment() {
             })
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Constants.setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

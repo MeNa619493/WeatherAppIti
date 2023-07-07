@@ -1,6 +1,8 @@
 package com.example.weatherapp.ui.home
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -14,6 +16,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
 import androidx.core.content.ContextCompat.registerReceiver
@@ -34,6 +38,7 @@ import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getSpeedUnit
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
+import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
 import com.google.android.material.snackbar.Snackbar
@@ -51,11 +56,26 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: HelperSharedPreferences
 
-    private val hourlyAdapter by lazy { HourlyAdapter(requireContext()) }
-    private val dailyAdapter by lazy { DailyAdapter(requireContext()) }
+    private val hourlyAdapter by lazy {
+        HourlyAdapter(
+            requireContext(),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
+        )
+    }
+    private val dailyAdapter by lazy {
+        DailyAdapter(
+            requireContext(),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
+        )
+    }
 
     @Inject
     lateinit var networkChangeListener: NetworkListener
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -172,54 +192,39 @@ class HomeFragment : Fragment() {
     ) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(
                 requireActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            PERMISSION_ID
-        )
+        requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
                 Log.d(TAG, "onRequestPermissionsResult: PERMISSION_GRANTED")
                 getLastLocation()
             } else {
                 Log.d(TAG, "onRequestPermissionsResult: PERMISSION_DENIED")
                 hideAllViews()
-                showSnackbar()
+                showAlertDialog()
             }
         }
-    }
 
-    private fun showSnackbar() {
-        val rootView = activity?.findViewById<View>(android.R.id.content)
-        val snackbar =
-            Snackbar.make(rootView!!, getString(R.string.ask_permission), Snackbar.LENGTH_LONG)
-        snackbar.setAction(getString(R.string.permission_postive_button)) {
+    private fun showAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Alert")
+        alertDialogBuilder.setMessage(getString(R.string.ask_permission))
+        alertDialogBuilder.setPositiveButton(getString(R.string.permission_postive_button)) { dialog: DialogInterface, _: Int ->
             gotoAppPermission()
         }
-        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.bottomMargin =
-            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-        snackbar.view.layoutParams = layoutParams
-        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
-        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
-        snackbar.show()
+        alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
+            dialog.dismiss()
+        }
+        alertDialogBuilder.setCancelable(false)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
     private fun gotoAppPermission() {
@@ -358,7 +363,7 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val TAG = "HomeFragment"
-        private const val PERMISSION_ID = 44
+        private const val PERMISSION_ID = 39
     }
 }
 

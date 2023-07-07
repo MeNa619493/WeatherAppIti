@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,8 @@ import com.example.weatherapp.workmanager.DailyWorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -59,6 +62,11 @@ class AlertsFragment : Fragment() {
             })
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Constants.setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -82,14 +90,19 @@ class AlertsFragment : Fragment() {
             showDialog()
         }
 
-        viewModel.addAlertId.observe(viewLifecycleOwner) { id ->
-            Log.e("AlertDialogFragment", "observe add alertId = $id")
-            setDailyWorkManger()
+        lifecycleScope.launchWhenStarted {
+            viewModel.alertInsertedSuccess.collect {
+                if (it) {
+                    setDailyWorkManger()
+                }
+            }
         }
 
-        viewModel.deleteAlertId.observe(viewLifecycleOwner) { id ->
-            Log.e("AlertDialogFragment", "observe delete alertId = $id")
-            WorkManager.getInstance(requireContext()).cancelUniqueWork("$id")
+        lifecycleScope.launchWhenStarted {
+            viewModel.deletedAlertId.collect { id ->
+                Log.e("AlertDialogFragment", "observe delete alertId = $id")
+                WorkManager.getInstance(requireContext()).cancelUniqueWork("$id")
+            }
         }
     }
 

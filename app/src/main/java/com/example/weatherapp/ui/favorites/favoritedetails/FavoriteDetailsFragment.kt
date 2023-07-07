@@ -42,8 +42,18 @@ class FavoriteDetailsFragment : Fragment() {
     @Inject
     lateinit var networkChangeListener: NetworkListener
 
-    private val hourlyAdapter by lazy { HourlyAdapter(requireContext()) }
-    private val dailyAdapter by lazy { DailyAdapter(requireContext()) }
+    private val hourlyAdapter by lazy {
+        HourlyAdapter(
+            requireContext(),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
+        )
+    }
+    private val dailyAdapter by lazy {
+        DailyAdapter(
+            requireContext(),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
+        )
+    }
 
     val viewModel: FavoriteDetailsViewModel by viewModels()
     private val args: FavoriteDetailsFragmentArgs by navArgs()

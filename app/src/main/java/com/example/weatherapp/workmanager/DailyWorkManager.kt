@@ -8,6 +8,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherAlert
+import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.DESCRIPTION
@@ -16,6 +17,7 @@ import com.example.weatherapp.utils.Constants.getDateMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -34,6 +36,15 @@ class DailyWorkManager @AssistedInject constructor(
     }
 
     private suspend fun getTodayAlerts() {
+
+        val alerts = repo.getAllAerts().first()
+        alerts.forEach { alert ->
+            scheduleTodayAlerts(alert)
+            deleteOutDatedAlerts(alert)
+        }
+    }
+
+    private suspend fun scheduleTodayAlerts(alert: WeatherAlert) {
         val weatherResponse = repo.getCurrentWeather(
             sharedPreferences.getString(Constants.LAT, "0.0"),
             sharedPreferences.getString(Constants.LONG, "0.0"),
@@ -41,28 +52,25 @@ class DailyWorkManager @AssistedInject constructor(
             "standard"
         )
         val currentWeather = weatherResponse.body()
-        val alerts = repo.getAllAerts().first()
-        alerts.forEach { alert ->
-            if (isAlertToday(alert)) {
-                val delay: Long = getDifferenceTimeStamp(alert)
-                if (currentWeather?.alerts.isNullOrEmpty()) {
-                    currentWeather?.current?.weather?.get(0)?.let {
-                        setHourlyWorkManger(
-                            delay,
-                            alert.id,
-                            it.description ?: "",
-                            currentWeather.current.weather[0].icon ?: ""
-                        )
-                    }
-                } else {
-                    currentWeather?.alerts?.get(0)?.let {
-                        setHourlyWorkManger(
-                            delay,
-                            alert.id,
-                            it.description ?: "",
-                            currentWeather.current?.weather?.get(0)?.icon ?: ""
-                        )
-                    }
+        if (isAlertToday(alert)) {
+            val delay: Long = getDifferenceTimeStamp(alert)
+            if (currentWeather?.alerts.isNullOrEmpty()) {
+                currentWeather?.current?.weather?.get(0)?.let {
+                    setHourlyWorkManger(
+                        delay,
+                        alert.id,
+                        it.description ?: "",
+                        currentWeather.current.weather[0].icon ?: ""
+                    )
+                }
+            } else {
+                currentWeather?.alerts?.get(0)?.let {
+                    setHourlyWorkManger(
+                        delay,
+                        alert.id,
+                        it.description ?: "",
+                        currentWeather.current?.weather?.get(0)?.icon ?: ""
+                    )
                 }
             }
         }
@@ -106,6 +114,17 @@ class DailyWorkManager @AssistedInject constructor(
         )
 
         Log.e("setHourlyWorkManger", "oneTimeWorkRequest done")
+    }
+
+    private suspend fun deleteOutDatedAlerts(alert: WeatherAlert) {
+        if (isAlertOutDated(alert.endDate)) {
+            repo.deleteAlert(alert)
+        }
+    }
+
+    private fun isAlertOutDated(eventEndDate: Long): Boolean {
+        val currentTimestamp = Instant.now().toEpochMilli()
+        return currentTimestamp > eventEndDate
     }
 
 }

@@ -1,8 +1,13 @@
 package com.example.weatherapp.utils
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.location.Geocoder
 import android.os.Build
+import android.util.DisplayMetrics
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
 import com.example.weatherapp.R
 import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.UserLocation
@@ -30,14 +35,25 @@ object Constants {
     const val NOTIFICATION_NAME: String = "Weather"
     const val NOTIFICATION_CHANNEL: String = "Weather_channel_01"
 
-    fun convertLongToDayName(time: Long): String {
-        val format = SimpleDateFormat("EEEE")
+    fun convertLongToDayName(time: Long, language:String): String {
+        val format = SimpleDateFormat("EEEE", Locale(language))
         return format.format(Date(time * 1000))
     }
 
-    fun convertLongToTime(time: Long): String {
-        val format = SimpleDateFormat("hh:mm aa")
+    fun convertLongToTime(time: Long, language:String): String {
+        val format = SimpleDateFormat("hh:mm aa", Locale(language))
         return format.format(Date(time * 1000))
+    }
+
+     fun setLocale(language: String, context: Context) {
+        val myLocale = Locale(language)
+        Locale.setDefault(myLocale)
+        val res: Resources = context.resources
+        val dm: DisplayMetrics = res.displayMetrics
+        val conf: Configuration = res.configuration
+        conf.locale = myLocale
+        conf.setLayoutDirection(myLocale)
+        res.updateConfiguration(conf, dm)
     }
 
     fun convertLongToDayDate(time: Long, language:String): String {

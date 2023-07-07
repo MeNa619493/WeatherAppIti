@@ -7,7 +7,10 @@ import androidx.navigation.Navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ActivityMainBinding
+import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
