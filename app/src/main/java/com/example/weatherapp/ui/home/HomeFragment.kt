@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
 import android.location.LocationManager
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
 import androidx.core.content.ContextCompat.registerReceiver
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
@@ -33,13 +32,12 @@ import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
 import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.METRIC
 import com.example.weatherapp.utils.Constants.getSpeedUnit
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,18 +51,8 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: HelperSharedPreferences
 
-    private val hourlyAdapter by lazy {
-        HourlyAdapter(
-            requireContext(),
-            sharedPreferences.getString(Constants.LANGUAGE, "en")
-        )
-    }
-    private val dailyAdapter by lazy {
-        DailyAdapter(
-            requireContext(),
-            sharedPreferences.getString(Constants.LANGUAGE, "en")
-        )
-    }
+    private val hourlyAdapter by lazy { HourlyAdapter(requireContext()) }
+    private val dailyAdapter by lazy { DailyAdapter(requireContext()) }
 
     @Inject
     lateinit var networkChangeListener: NetworkListener
@@ -208,9 +196,37 @@ class HomeFragment : Fragment() {
 
         if (requestCode == PERMISSION_ID) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "onRequestPermissionsResult: PERMISSION_GRANTED")
                 getLastLocation()
+            } else {
+                Log.d(TAG, "onRequestPermissionsResult: PERMISSION_DENIED")
+                hideAllViews()
+                showSnackbar()
             }
         }
+    }
+
+    private fun showSnackbar() {
+        val rootView = activity?.findViewById<View>(android.R.id.content)
+        val snackbar =
+            Snackbar.make(rootView!!, getString(R.string.ask_permission), Snackbar.LENGTH_LONG)
+        snackbar.setAction(getString(R.string.permission_postive_button)) {
+            gotoAppPermission()
+        }
+        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.bottomMargin =
+            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+        snackbar.view.layoutParams = layoutParams
+        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
+        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
+        snackbar.show()
+    }
+
+    private fun gotoAppPermission() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri: Uri = Uri.fromParts("package", activity?.packageName, null)
+        intent.data = uri
+        startActivity(intent)
     }
 
     private fun isLocationEnabled(): Boolean {

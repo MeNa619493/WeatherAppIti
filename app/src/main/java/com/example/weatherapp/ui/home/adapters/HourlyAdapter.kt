@@ -14,7 +14,7 @@ import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
 
 
-class HourlyAdapter(private val context: Context, private val language: String) : ListAdapter<Hourly, HourlyAdapter.MyViewHolder>(
+class HourlyAdapter(private val context: Context) : ListAdapter<Hourly, HourlyAdapter.MyViewHolder>(
     HourlyDiffCallback()
 ) {
 
@@ -23,15 +23,15 @@ class HourlyAdapter(private val context: Context, private val language: String) 
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), context, language)
+        holder.bind(getItem(position), context)
     }
 
     class MyViewHolder(private val binding: ItemHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(hourly: Hourly, context: Context, language: String) {
+        fun bind(hourly: Hourly, context: Context) {
             binding.apply {
-                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it, language) }
+                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it) }
                 val strFormat: String = context.getString(
                     R.string.hourly,
                     hourly.temp?.toInt(),

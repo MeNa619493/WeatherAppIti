@@ -51,4 +51,6 @@
     <string name="no_favorites_found">لا يوجد تفضيلات</string>
     <string name="no_alerts_found">لا يوجد تنبيهات</string>
     <string name="no_connection">يرجى التحقق من اتصالك بالانترنت وأعد المحاولة مرة أخرى</string>
+    <string name="ask_permission">تم رفض إلاذن. قد يتم تقييد بعض الوظائف</string>
+    <string name="permission_postive_button">السماح</string>
 </resources>

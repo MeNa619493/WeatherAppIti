@@ -52,4 +52,6 @@
     <string name="no_favorites_found">No Favorites Founded</string>
     <string name="no_alerts_found">No Alerts Founded</string>
     <string name="no_connection">Please, check your connection and try again</string>
+    <string name="ask_permission">Location permission denied. Some functionality may be restricted</string>
+    <string name="permission_postive_button">Grant</string>
 </resources>

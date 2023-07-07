@@ -39,8 +39,8 @@ class SplashActivity : AppCompatActivity() {
         }, 3000)
     }
 
-    private fun setLocale(lang: String) {
-        val myLocale = Locale(lang)
+    private fun setLocale(language: String) {
+        val myLocale = Locale(language)
         Locale.setDefault(myLocale)
         val res: Resources = resources
         val dm: DisplayMetrics = res.displayMetrics

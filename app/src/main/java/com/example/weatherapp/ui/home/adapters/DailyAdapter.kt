@@ -14,7 +14,7 @@ import com.example.weatherapp.model.pojo.Daily
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
 
-class DailyAdapter(private val context: Context, private val language: String)  : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
+class DailyAdapter(private val context: Context)  : ListAdapter<Daily, DailyAdapter.MyViewHolder>(
     DailyDiffCallback()
 ) {
 
@@ -23,16 +23,16 @@ class DailyAdapter(private val context: Context, private val language: String)  
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), context, language)
+        holder.bind(getItem(position), context)
     }
 
     class MyViewHolder(private val binding: ItemDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(daily: Daily, context: Context, language: String) {
+        fun bind(daily: Daily, context: Context) {
             binding.apply {
                 daily.dt?.let {
-                    tvDay.text = Constants.convertLongToDayName(it, language)
+                    tvDay.text = Constants.convertLongToDayName(it)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
 

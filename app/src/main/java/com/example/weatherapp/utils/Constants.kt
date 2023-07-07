@@ -30,13 +30,13 @@ object Constants {
     const val NOTIFICATION_NAME: String = "Weather"
     const val NOTIFICATION_CHANNEL: String = "Weather_channel_01"
 
-    fun convertLongToDayName(time: Long, language:String): String {
-        val format = SimpleDateFormat("EEEE", Locale(language))
+    fun convertLongToDayName(time: Long): String {
+        val format = SimpleDateFormat("EEEE")
         return format.format(Date(time * 1000))
     }
 
-    fun convertLongToTime(time: Long, language:String): String {
-        val format = SimpleDateFormat("hh:mm aa", Locale(language))
+    fun convertLongToTime(time: Long): String {
+        val format = SimpleDateFormat("hh:mm aa")
         return format.format(Date(time * 1000))
     }
 
