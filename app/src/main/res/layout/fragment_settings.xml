@@ -87,7 +87,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="90dp"
                         android:buttonTint="@color/white"
-                        android:checked="true"
                         android:padding="8dp"
                         android:text="@string/english"
                         android:textColor="@color/white"
@@ -148,7 +147,7 @@
                         android:padding="8dp"
                         android:text="@string/c_with_wind_speed_m_sec"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         tools:layout_editor_absoluteX="157dp"
                         tools:layout_editor_absoluteY="38dp" />
 
@@ -157,11 +156,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/white"
-                        android:checked="true"
                         android:padding="8dp"
                         android:text="@string/f_with_wind_speed_mile_hr"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         tools:layout_editor_absoluteX="71dp"
                         tools:layout_editor_absoluteY="43dp" />
 
@@ -170,11 +168,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/white"
-                        android:checked="true"
                         android:padding="8dp"
                         android:text="@string/k_with_wind_speed_m_sec"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         tools:layout_editor_absoluteX="71dp"
                         tools:layout_editor_absoluteY="43dp" />
                 </RadioGroup>
@@ -240,7 +237,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="@color/white"
-                        android:checked="true"
                         android:layout_marginStart="45dp"
                         android:padding="8dp"
                         android:text="@string/gps"

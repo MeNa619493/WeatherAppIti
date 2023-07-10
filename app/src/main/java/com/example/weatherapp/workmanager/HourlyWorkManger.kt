@@ -17,35 +17,50 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
+import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.repos.Repo
 import com.example.weatherapp.utils.AlertWindowOverlay
 import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.DESCRIPTION
-import com.example.weatherapp.utils.Constants.ICON
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 @HiltWorker
 class HourlyWorkManger @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
+    private val repo: Repo,
+    private val sharedPreferences: HelperSharedPreferences
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val description = inputData.getString(DESCRIPTION)!!
-        val icon = inputData.getString(ICON)!!
-
-        sendNotification(description)
+        withContext(Dispatchers.IO){
+            startAlert()
+        }
         Log.e("doWork", "oneTimeWorkRequest")
-        if (Settings.canDrawOverlays(context)) {
-            GlobalScope.launch(Dispatchers.Main) {
-                val alertWindowManger = AlertWindowOverlay(context, description, icon)
-                alertWindowManger.setAlertWindowManger()
+        return Result.success()
+    }
+
+    private suspend fun startAlert() {
+        val weatherResponse = repo.getCurrentWeather(
+            sharedPreferences.getString(Constants.LAT, "0.0"),
+            sharedPreferences.getString(Constants.LONG, "0.0"),
+            sharedPreferences.getString(Constants.UNIT, "metric"),
+            sharedPreferences.getString(Constants.LANGUAGE, "en")
+        )
+        val currentWeather = weatherResponse.body()
+
+        if (currentWeather?.alerts.isNullOrEmpty()) {
+            currentWeather?.current?.weather?.get(0)?.let {
+                sendNotification(it.description?:"")
+                startWindowAlert(it.description?:"", it.icon?:"")
+            }
+        } else {
+            currentWeather?.alerts?.get(0)?.let {
+                sendNotification(it.description?:"")
+                startWindowAlert(it.description?:"", "01d")
             }
         }
-        return Result.success()
     }
 
     private fun sendNotification(description: String) {
@@ -89,5 +104,14 @@ class HourlyWorkManger @AssistedInject constructor(
         notificationManager.createNotificationChannel(channel)
 
         notificationManager.notify(notification_id, notification.build())
+    }
+
+    private suspend fun startWindowAlert(description: String, icon: String) {
+        if (Settings.canDrawOverlays(context)) {
+            withContext(Dispatchers.Main) {
+                val alertWindowManger = AlertWindowOverlay(context, description, icon)
+                alertWindowManger.setAlertWindowManger()
+            }
+        }
     }
 }

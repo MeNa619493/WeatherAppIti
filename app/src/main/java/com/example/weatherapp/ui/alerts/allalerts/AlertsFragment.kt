@@ -28,6 +28,7 @@ import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.alerts.SharedAlertViewModel
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.workmanager.DailyWorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -54,7 +55,7 @@ class AlertsFragment : Fragment() {
     lateinit var sharedPreferences: HelperSharedPreferences
 
     private val alertsAdapter by lazy {
-        AlertsAdapter(sharedPreferences.getString(Constants.LANGUAGE, "en"),
+        AlertsAdapter( getLanguageLocale(),
             object : AlertsAdapter.AlertClickListener {
                 override fun onDeleteItemClicked(weatherAlert: WeatherAlert) {
                     showAlertDialog(weatherAlert)
@@ -64,7 +65,7 @@ class AlertsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Constants.setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+        setLocale(getLanguageLocale(), requireContext())
     }
 
     override fun onCreateView(
@@ -257,6 +258,10 @@ class AlertsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
     }
 
     companion object {

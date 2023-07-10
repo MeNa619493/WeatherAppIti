@@ -138,8 +138,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         viewModel.saveFavLocationWeather(
             "${location.lat}",
             "${location.lon}",
-            sharedPreferences.getString(Constants.UNIT, "metric"),
-            sharedPreferences.getString(Constants.LANGUAGE, "en"),
+            getUnits(),
+            getLanguageLocale(),
             )
     }
 
@@ -188,6 +188,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 Log.i(TAG, "An error occurred: $status")
             }
         })
+    }
+
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+    }
+
+    private fun getUnits(): String {
+        return sharedPreferences.getString(Constants.UNIT, "metric")
     }
 
     override fun onDestroyView() {

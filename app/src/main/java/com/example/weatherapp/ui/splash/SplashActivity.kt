@@ -17,6 +17,7 @@ import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.ui.dialog.ChooseDialogFragment
 import com.example.weatherapp.ui.home.HomeFragment
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.setLocale
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -32,12 +33,13 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            if (isFirstTime()){
+            if (isFirstTime()) {
                 if (!supportFragmentManager.isDestroyed) {
                     setIsFirstTime()
                     ChooseDialogFragment().show(supportFragmentManager, "dialog")
                 }
             } else {
+                setLocale(getLanguageLocale(), this)
                 startMainActivity()
             }
         }, 3000)
@@ -49,8 +51,14 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
         startActivity(intent)
+    }
+
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
     }
 
     private fun isFirstTime(): Boolean {

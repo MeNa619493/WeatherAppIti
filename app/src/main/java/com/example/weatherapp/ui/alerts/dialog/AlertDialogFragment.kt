@@ -18,6 +18,7 @@ import com.example.weatherapp.ui.alerts.SharedAlertViewModel
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.convertLongToTimePicker
 import com.example.weatherapp.utils.Constants.getDateMillis
+import com.example.weatherapp.utils.Constants.setLocale
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -38,6 +39,11 @@ class AlertDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var sharedPreferences: HelperSharedPreferences
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setLocale(getLanguageLocale(), requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,10 +109,10 @@ class AlertDialogFragment : DialogFragment() {
                     val date = "$day/${month + 1}/$year"
                     if (isFrom) {
                         binding.dateFrom.text = date
-                        startDate = getDateMillis(date, sharedPreferences.getString(Constants.LANGUAGE, "en"))
+                        startDate = getDateMillis(date, getLanguageLocale())
                     } else {
                         binding.dateTo.text = date
-                        endDate = getDateMillis(date, sharedPreferences.getString(Constants.LANGUAGE, "en"))
+                        endDate = getDateMillis(date, getLanguageLocale())
                     }
                 }
             }
@@ -131,10 +137,10 @@ class AlertDialogFragment : DialogFragment() {
                     val time =
                         (TimeUnit.MINUTES.toMillis(minute.toLong()) + TimeUnit.HOURS.toMillis(hour.toLong()))
                     if (isFrom) {
-                        binding.hourFrom.text = convertLongToTimePicker(time, sharedPreferences.getString(Constants.LANGUAGE, "en"))
+                        binding.hourFrom.text = convertLongToTimePicker(time, getLanguageLocale())
                         timeFrom = time
                     } else {
-                        binding.hourTo.text = convertLongToTimePicker(time, sharedPreferences.getString(Constants.LANGUAGE, "en"))
+                        binding.hourTo.text = convertLongToTimePicker(time, getLanguageLocale())
                         timeTo = time
                     }
                 }
@@ -149,6 +155,10 @@ class AlertDialogFragment : DialogFragment() {
             false
         )
         timePickerDialog.show()
+    }
+
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
     }
 
 }

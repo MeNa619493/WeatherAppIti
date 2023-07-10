@@ -87,7 +87,7 @@ class SettingsFragment : Fragment() {
             getUnitsSettings()
             saveSettingsToSharedPreferences()
 
-            if (selectedLocationSetting) {
+            if (selectedLocationSetting != oldLocationSetting || selectedLocationSetting) {
                 changeLocationData()
             }
 
@@ -116,9 +116,11 @@ class SettingsFragment : Fragment() {
 
     private fun showSnackbar() {
         val rootView = activity?.findViewById<View>(android.R.id.content)
-        snackbar = Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
+        snackbar =
+            Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
         val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.bottomMargin = resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
+        layoutParams.bottomMargin =
+            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
         snackbar.view.layoutParams = layoutParams
         snackbar.setActionTextColor(resources.getColor(android.R.color.white))
         snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))

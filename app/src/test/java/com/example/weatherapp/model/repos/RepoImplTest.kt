@@ -7,10 +7,14 @@ import com.example.weatherapp.model.local.WeatherDatabase
 import com.example.weatherapp.model.pojo.*
 import kotlinx.coroutines.flow.Flow
 import com.example.weatherapp.model.remote.ApiService
+import io.mockk.unmockkAll
+import kotlinx.coroutines.Dispatchers
 import org.mockito.Mockito.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.resetMain
+import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -43,6 +47,14 @@ class RepoImplTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
         repoImpl = RepoImpl(apiService, weatherDao, alertDao)
+    }
+
+    @After
+    fun cleanup() {
+        Dispatchers.resetMain()
+
+        // Clear all mock interactions
+        unmockkAll()
     }
 
     @Test

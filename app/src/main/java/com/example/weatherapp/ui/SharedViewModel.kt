@@ -73,7 +73,7 @@ class SharedViewModel @Inject constructor(
                     _weather.postValue(NetworkResult.Success(it))
                 }
             } else {
-                Log.e("SharedViewModel", weatherResponse.errorBody().toString())
+                //Log.e("SharedViewModel", weatherResponse.errorBody().toString())
                 _weather.postValue(NetworkResult.Error(weatherResponse.message()))
             }
         }

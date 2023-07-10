@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.home
 
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -41,7 +40,6 @@ import com.example.weatherapp.utils.Constants.getTemperatureUnit
 import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -57,16 +55,10 @@ class HomeFragment : Fragment() {
     lateinit var sharedPreferences: HelperSharedPreferences
 
     private val hourlyAdapter by lazy {
-        HourlyAdapter(
-            requireContext(),
-            sharedPreferences.getString(Constants.LANGUAGE, "en")
-        )
+        HourlyAdapter(getLanguageLocale())
     }
     private val dailyAdapter by lazy {
-        DailyAdapter(
-            requireContext(),
-            sharedPreferences.getString(Constants.LANGUAGE, "en")
-        )
+        DailyAdapter(getLanguageLocale())
     }
 
     @Inject
@@ -74,7 +66,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+        setLocale(getLanguageLocale(), requireContext())
     }
 
     override fun onCreateView(
@@ -112,15 +104,10 @@ class HomeFragment : Fragment() {
         NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
                 hideNoConnectionViews()
-                if (sharedPreferences.getString(Constants.LAT, "").isBlank()
-                    || sharedPreferences.getString(Constants.LONG, "").isBlank()
-                ) {
+                if (getLat().isBlank() || getLong().isBlank()) {
                     getLastLocation()
                 } else {
-                    val location = UserLocation(
-                        sharedPreferences.getString(Constants.LAT, "").toDouble(),
-                        sharedPreferences.getString(Constants.LONG, "").toDouble()
-                    )
+                    val location = UserLocation(getLat().toDouble(), getLong().toDouble())
                     viewModel.locationLiveData.value = location
                 }
             } else {
@@ -161,8 +148,8 @@ class HomeFragment : Fragment() {
             viewModel.getCurrentWeather(
                 "${it.lat}",
                 "${it.lon}",
-                sharedPreferences.getString(Constants.UNIT, "metric"),
-                sharedPreferences.getString(Constants.LANGUAGE, "en")
+                getUnits(),
+                getLanguageLocale()
             )
         }
     }
@@ -192,12 +179,17 @@ class HomeFragment : Fragment() {
     ) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(
                 requireActivity(),
-                ACCESS_FINE_LOCATION
+                android.Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
 
     private fun requestPermission() {
-        requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        requestPermissionLauncher.launch(
+            arrayOf(
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ).toString()
+        )
     }
 
     private val requestPermissionLauncher =
@@ -282,7 +274,7 @@ class HomeFragment : Fragment() {
                 it.dt?.let { date ->
                     tvDate.text = Constants.convertLongToDayDate(
                         date,
-                        sharedPreferences.getString(Constants.LANGUAGE, "en")
+                        getLanguageLocale()
                     )
                 }
 
@@ -296,21 +288,61 @@ class HomeFragment : Fragment() {
 
                 }
             }
-            tvTemp.text =
-                "${weatherResponse.current?.temp?.toInt()} ${getTemperatureUnit(requireContext())}"
-            tvPressureDeg.text =
-                "${weatherResponse.current?.pressure} ${requireContext().getString(R.string.hpa)}"
-            tvWindDeg.text =
-                "${weatherResponse.current?.wind_speed} ${getSpeedUnit(requireContext())}"
-            tvHumidityDeg.text = "${weatherResponse.current?.humidity} %"
-            tvCloudDeg.text = "${weatherResponse.current?.clouds} %"
-            tvRayDeg.text = weatherResponse.current?.uvi.toString()
-            tvVisibilityDeg.text = weatherResponse.current?.visibility.toString()
+
+            val tempFormat = getString(
+                R.string.temp_deg,
+                weatherResponse.current?.temp?.toInt(),
+                getTemperatureUnit(requireContext())
+            )
+            tvTemp.text = tempFormat
+
+            val pressureFormat = getString(
+                R.string.pressure_deg,
+                weatherResponse.current?.pressure,
+                requireContext().getString(R.string.hpa)
+            )
+            tvPressureDeg.text = pressureFormat
+
+            val windFormat: String = getString(
+                R.string.wind_deg,
+                weatherResponse.current?.wind_speed?.toInt(),
+                getSpeedUnit(requireContext())
+            )
+            tvWindDeg.text = windFormat
+
+            val humidityFormat = getString(
+                R.string.humidity_deg,
+                weatherResponse.current?.humidity,
+                "%"
+            )
+            tvHumidityDeg.text = humidityFormat
+
+            val cloudFormat = getString(
+                R.string.cloud_deg,
+                weatherResponse.current?.clouds,
+                "%"
+            )
+            tvCloudDeg.text = cloudFormat
+
+            val uvFormat = getString(
+                R.string.uv_deg,
+                weatherResponse.current?.uvi?.toInt(),
+                " "
+            )
+            tvRayDeg.text = uvFormat
+
+            val visibilityFormat = getString(
+                R.string.visibility_deg,
+                weatherResponse.current?.visibility,
+                " "
+            )
+            tvVisibilityDeg.text = visibilityFormat
+
             binding.tvAddress.text = Constants.getAddress(
                 requireContext(),
                 weatherResponse.lat ?: 0.0,
                 weatherResponse.lon ?: 0.0,
-                sharedPreferences.getString(Constants.LANGUAGE, "en")
+                getLanguageLocale()
             )
         }
     }
@@ -356,6 +388,22 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+    }
+
+    private fun getUnits(): String {
+        return sharedPreferences.getString(Constants.UNIT, "metric")
+    }
+
+    private fun getLat(): String {
+        return sharedPreferences.getString(Constants.LAT, "")
+    }
+
+    private fun getLong(): String {
+        return sharedPreferences.getString(Constants.LONG, "")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -363,7 +411,6 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val TAG = "HomeFragment"
-        private const val PERMISSION_ID = 39
     }
 }
 

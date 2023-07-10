@@ -21,8 +21,6 @@ object Constants {
     const val DATABASE_NAME = "WeatherDatabase"
     const val FIRST_TIME = "first"
     const val IS_MAP = "map"
-    const val DESCRIPTION = "description"
-    const val ICON = "icon"
     const val LAT = "lat"
     const val LONG = "long"
     const val LANGUAGE = "language"

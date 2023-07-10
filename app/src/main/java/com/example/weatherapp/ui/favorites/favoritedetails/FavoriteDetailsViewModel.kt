@@ -35,7 +35,7 @@ class FavoriteDetailsViewModel @Inject constructor(
                     _weather.postValue(NetworkResult.Success(it))
                 }
             } else {
-                Log.e("FavoriteDetailViewModel", weatherResponse.errorBody().toString())
+                //Log.e("FavoriteDetailViewModel", weatherResponse.errorBody().toString())
                 _weather.postValue(NetworkResult.Error(weatherResponse.message()))
             }
         }

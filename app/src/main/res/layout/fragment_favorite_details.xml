@@ -234,7 +234,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="30sp"
-                        tools:text="25" />
+                        android:text="@string/temp_deg" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -262,7 +262,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="23%" />
+                        android:text="@string/pressure_deg" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -290,7 +290,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="23%" />
+                        android:text="@string/wind_deg" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -318,7 +318,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="18%" />
+                        android:text="@string/humidity_deg" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -353,7 +353,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="23%" />
+                        android:text="@string/cloud_deg" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -381,7 +381,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="23%" />
+                        android:text="@string/uv_deg" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -409,7 +409,7 @@
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
                         android:textColor="@color/white"
-                        tools:text="18%" />
+                        android:text="@string/visibility_deg" />
 
                     <TextView
                         android:layout_width="match_parent"

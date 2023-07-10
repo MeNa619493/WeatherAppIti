@@ -54,4 +54,12 @@
     <string name="no_connection">Please, check your connection and try again</string>
     <string name="ask_permission">Location permission denied. Some functionality may be restricted</string>
     <string name="permission_postive_button">Grant</string>
+
+    <string name="temp_deg">%1$d %2$s</string>
+    <string name="pressure_deg">%1$d %2$s</string>
+    <string name="wind_deg">%1$d %2$s</string>
+    <string name="humidity_deg">%1$d %2$s</string>
+    <string name="cloud_deg">%1$d %2$s</string>
+    <string name="uv_deg">%1$d %2$s</string>
+    <string name="visibility_deg">%1$d %2$s</string>
 </resources>

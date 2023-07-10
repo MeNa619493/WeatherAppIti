@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChooseDialogFragment : DialogFragment()  {
+class ChooseDialogFragment : DialogFragment() {
 
     private var _binding: FragmentChooseDialogBinding? = null
     private val binding get() = _binding!!
@@ -24,7 +24,11 @@ class ChooseDialogFragment : DialogFragment()  {
     @Inject
     lateinit var sharedPreferences: HelperSharedPreferences
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         dialog!!.window?.setBackgroundDrawableResource(R.drawable.round_corner);
         _binding = FragmentChooseDialogBinding.inflate(inflater, container, false)
         return binding.root
@@ -70,6 +74,4 @@ class ChooseDialogFragment : DialogFragment()  {
             false
         })
     }
-
-
 }

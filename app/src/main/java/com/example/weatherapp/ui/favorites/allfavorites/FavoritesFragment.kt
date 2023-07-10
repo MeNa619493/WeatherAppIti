@@ -21,6 +21,7 @@ import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +46,7 @@ class FavoritesFragment : Fragment() {
     private val favoritesAdapter by lazy {
         FavoritesAdapter(
             requireContext(),
-            sharedPreferences.getString(Constants.LANGUAGE, "en"),
+            getLanguageLocale(),
             object : FavoritesAdapter.WeatherResponseClickListener {
                 override fun onItemClicked(weatherResponse: WeatherResponse) {
                     findNavController().navigate(
@@ -63,7 +64,7 @@ class FavoritesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Constants.setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+        setLocale(getLanguageLocale(), requireContext())
     }
 
     override fun onCreateView(
@@ -214,6 +215,10 @@ class FavoritesFragment : Fragment() {
                         }).show()
             }
         }).attachToRecyclerView(binding.rvFavs)
+    }
+
+    private fun getLanguageLocale(): String {
+        return sharedPreferences.getString(Constants.LANGUAGE, "en")
     }
 
     override fun onDestroyView() {
