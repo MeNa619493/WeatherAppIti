@@ -40,8 +40,12 @@ class RepoImpl(
         return alertDao.insertAlert(weatherAlert)
     }
 
-    override fun getAllAerts(): Flow<List<WeatherAlert>> {
-        return alertDao.getAllAerts()
+    override fun getAllAerts(currentTime: Long): Flow<List<WeatherAlert>> {
+        return alertDao.getAllAerts(currentTime)
+    }
+
+    override suspend fun deleteAlerts(currentTime: Long) {
+        return alertDao.deleteAlerts(currentTime)
     }
 
     override suspend fun deleteAlert(weatherAlert: WeatherAlert): Int {

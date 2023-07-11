@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.settings
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -19,6 +20,7 @@ import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
+import com.example.weatherapp.utils.SnackbarUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,7 +48,6 @@ class SettingsFragment : Fragment() {
     private var oldLocationSetting = false
 
     private lateinit var nav: BottomNavigationView
-    private lateinit var snackbar: Snackbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,29 +108,14 @@ class SettingsFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
-                hideSnackbar()
+                SnackbarUtils.hideSnackbar()
             } else {
-                showSnackbar()
+                SnackbarUtils.showSnackbar(
+                    binding.root,
+                    getString(R.string.no_connection),
+                    Color.RED
+                )
             }
-        }
-    }
-
-    private fun showSnackbar() {
-        val rootView = activity?.findViewById<View>(android.R.id.content)
-        snackbar =
-            Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
-        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.bottomMargin =
-            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-        snackbar.view.layoutParams = layoutParams
-        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
-        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
-        snackbar.show()
-    }
-
-    private fun hideSnackbar() {
-        if (this::snackbar.isInitialized) {
-            snackbar.dismiss()
         }
     }
 

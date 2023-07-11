@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.alerts.allalerts
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +31,7 @@ import com.example.weatherapp.ui.alerts.SharedAlertViewModel
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.setLocale
 import com.example.weatherapp.utils.NetworkListener
+import com.example.weatherapp.utils.SnackbarUtils
 import com.example.weatherapp.workmanager.DailyWorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -43,7 +45,6 @@ import javax.inject.Inject
 class AlertsFragment : Fragment() {
 
     private lateinit var viewModel: SharedAlertViewModel
-    private lateinit var snackbar: Snackbar
 
     private var _binding: FragmentAlertsBinding? = null
     private val binding get() = _binding!!
@@ -84,7 +85,6 @@ class AlertsFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity())[SharedAlertViewModel::class.java]
 
         setupAlertsRecyclerView()
-        observeAllAlerts()
         observeNetworkState()
 
         binding.floatingActionButton.setOnClickListener {
@@ -107,6 +107,13 @@ class AlertsFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        observeAllAlerts()
+        deleteAlerts()
+    }
+
     override fun onPause() {
         super.onPause()
         activity?.let {
@@ -117,30 +124,19 @@ class AlertsFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
-                hideSnackbar()
+                SnackbarUtils.hideSnackbar()
             } else {
-                showSnackbar()
+                SnackbarUtils.showSnackbar(
+                    binding.root,
+                    getString(R.string.no_connection),
+                    Color.RED
+                )
             }
         }
     }
 
-    private fun showSnackbar() {
-        val rootView = activity?.findViewById<View>(android.R.id.content)
-        snackbar =
-            Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
-        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.bottomMargin =
-            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-        snackbar.view.layoutParams = layoutParams
-        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
-        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
-        snackbar.show()
-    }
-
-    private fun hideSnackbar() {
-        if (this::snackbar.isInitialized) {
-            snackbar.dismiss()
-        }
+    private fun deleteAlerts() {
+        viewModel.deleteAlerts()
     }
 
     private fun observeAllAlerts() {

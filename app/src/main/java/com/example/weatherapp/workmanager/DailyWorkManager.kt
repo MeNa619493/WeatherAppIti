@@ -6,6 +6,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.repos.Repo
+import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getDateMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -28,10 +29,9 @@ class DailyWorkManager @AssistedInject constructor(
     }
 
     private suspend fun getTodayAlerts() {
-        val alerts = repo.getAllAerts().first()
+        val alerts = repo.getAllAerts(System.currentTimeMillis()).first()
         alerts.forEach { alert ->
             scheduleTodayAlerts(alert)
-            deleteOutDatedAlerts(alert)
         }
     }
 
@@ -62,19 +62,10 @@ class DailyWorkManager @AssistedInject constructor(
         return alert.timeFrom - (hour + minute)
     }
 
-    private suspend fun deleteOutDatedAlerts(alert: WeatherAlert) {
-        if (isAlertOutDated(alert)) {
-            repo.deleteAlert(alert)
-        }
-    }
-
-    private fun isAlertOutDated(alert: WeatherAlert): Boolean {
-        val currentTimestamp = Instant.now().toEpochMilli()
-        val alertEnd = alert.endDate + alert.timeTo
-        return currentTimestamp >= alertEnd
-    }
-
     private fun setHourlyWorkManger(delay: Long, id: Int) {
+        val data = Data.Builder()
+        data.putInt(Constants.ALERT_ID, id)
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
@@ -83,6 +74,7 @@ class DailyWorkManager @AssistedInject constructor(
         val oneTimeWorkRequest = OneTimeWorkRequest.Builder(HourlyWorkManger::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setConstraints(constraints)
+            .setInputData(data.build())
             .build()
 
         WorkManager.getInstance(context).enqueueUniqueWork(

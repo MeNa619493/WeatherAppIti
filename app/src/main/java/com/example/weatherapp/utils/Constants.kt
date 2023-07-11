@@ -21,17 +21,20 @@ object Constants {
     const val DATABASE_NAME = "WeatherDatabase"
     const val FIRST_TIME = "first"
     const val IS_MAP = "map"
+
     const val LAT = "lat"
     const val LONG = "long"
     const val LANGUAGE = "language"
-    const val UNIT = "unit"
 
+    const val UNIT = "unit"
     const val METRIC = "metric"
     const val IMPERIAL = "imperial"
     const val STANDARD = "standard"
 
-    const val NOTIFICATION_NAME: String = "Weather"
-    const val NOTIFICATION_CHANNEL: String = "Weather_channel_01"
+    const val NOTIFICATION_NAME = "Weather"
+    const val NOTIFICATION_CHANNEL = "Weather_channel_01"
+
+    const val ALERT_ID = "id"
 
     fun convertLongToDayName(time: Long, language:String): String {
         val format = SimpleDateFormat("EEEE", Locale(language))

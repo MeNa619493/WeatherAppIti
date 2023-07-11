@@ -10,8 +10,11 @@ interface AlertDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAlert(weatherAlert: WeatherAlert): Long
 
-    @Query("Select * from Alert")
-    fun getAllAerts(): Flow<List<WeatherAlert>>
+    @Query("Select * from Alert WHERE endDate + timeTo > :currentTime")
+    fun getAllAerts(currentTime: Long): Flow<List<WeatherAlert>>
+
+    @Query("Delete FROM Alert WHERE endDate + timeTo < :currentTime")
+    suspend fun deleteAlerts(currentTime: Long)
 
     @Delete
     suspend fun deleteAlert(weatherAlert: WeatherAlert): Int

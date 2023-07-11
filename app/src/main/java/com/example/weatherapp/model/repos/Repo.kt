@@ -21,6 +21,7 @@ interface Repo {
     fun getAllWeather(): Flow<List<WeatherResponse>>
     suspend fun deleteWeather(weatherResponse: WeatherResponse)
     suspend fun insertAlert(weatherAlert: WeatherAlert): Long
-    fun getAllAerts(): Flow<List<WeatherAlert>>
+    fun getAllAerts(currentTime: Long): Flow<List<WeatherAlert>>
+    suspend fun deleteAlerts(currentTime: Long)
     suspend fun deleteAlert(weatherAlert: WeatherAlert): Int
 }

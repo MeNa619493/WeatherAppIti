@@ -11,6 +11,7 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import androidx.core.app.JobIntentService.enqueueWork
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -34,14 +35,15 @@ class HourlyWorkManger @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
+        val id = inputData.getInt(Constants.ALERT_ID, 0)
         withContext(Dispatchers.IO){
-            startAlert()
+            startAlert(id)
         }
         Log.e("doWork", "oneTimeWorkRequest")
         return Result.success()
     }
 
-    private suspend fun startAlert() {
+    private suspend fun startAlert(id: Int) {
         val weatherResponse = repo.getCurrentWeather(
             sharedPreferences.getString(Constants.LAT, "0.0"),
             sharedPreferences.getString(Constants.LONG, "0.0"),

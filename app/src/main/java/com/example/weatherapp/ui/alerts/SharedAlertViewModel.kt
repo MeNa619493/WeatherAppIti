@@ -27,7 +27,11 @@ class SharedAlertViewModel @Inject constructor(
     }
 
     fun getAllAlerts() : LiveData<List<WeatherAlert>> {
-        return repo.getAllAerts().asLiveData()
+        return repo.getAllAerts(System.currentTimeMillis()).asLiveData()
+    }
+
+    fun deleteAlerts() = viewModelScope.launch {
+        repo.deleteAlerts(System.currentTimeMillis())
     }
 
     fun deleteAlert(weatherAlert: WeatherAlert) = viewModelScope.launch {

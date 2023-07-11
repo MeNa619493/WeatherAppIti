@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui.favorites.favoritedetails
 
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
@@ -26,6 +27,7 @@ import com.example.weatherapp.utils.Constants.getSpeedUnit
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
+import com.example.weatherapp.utils.SnackbarUtils
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -47,8 +49,6 @@ class FavoriteDetailsFragment : Fragment() {
 
     val viewModel: FavoriteDetailsViewModel by viewModels()
     private val args: FavoriteDetailsFragmentArgs by navArgs()
-
-    private lateinit var snackbar: Snackbar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,7 +85,7 @@ class FavoriteDetailsFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
-                hideSnackbar()
+                SnackbarUtils.hideSnackbar()
                 viewModel.getFavWeather(
                     args.weather.lat.toString(),
                     args.weather.lon.toString(),
@@ -97,27 +97,12 @@ class FavoriteDetailsFragment : Fragment() {
                 hourlyAdapter.submitList(args.weather.hourly)
                 dailyAdapter.submitList(args.weather.daily)
                 initUi(args.weather)
-                showSnackbar()
+                SnackbarUtils.showSnackbar(
+                    binding.root,
+                    getString(R.string.no_connection),
+                    Color.RED
+                )
             }
-        }
-    }
-
-    private fun showSnackbar() {
-        val rootView = activity?.findViewById<View>(android.R.id.content)
-        snackbar =
-            Snackbar.make(rootView!!, getString(R.string.no_connection), Snackbar.LENGTH_INDEFINITE)
-        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.bottomMargin =
-            resources.getDimensionPixelSize(R.dimen.bottom_navigation_height)
-        snackbar.view.layoutParams = layoutParams
-        snackbar.setActionTextColor(resources.getColor(android.R.color.white))
-        snackbar.view.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
-        snackbar.show()
-    }
-
-    private fun hideSnackbar() {
-        if (this::snackbar.isInitialized) {
-            snackbar.dismiss()
         }
     }
 

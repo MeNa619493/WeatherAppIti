@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherapp.R
@@ -83,8 +84,13 @@ class AlertDialogFragment : DialogFragment() {
                 timeFrom = timeFrom,
                 timeTo = timeTo
             )
-            viewModel.saveWeatherAlert(alert)
-            Log.e("AlertDialogFragment", "save clicked")
+            if (startDate != 0L && endDate != 0L && timeFrom != 0L && timeTo != 0L) {
+                viewModel.saveWeatherAlert(alert)
+                Log.e("AlertDialogFragment", "save clicked")
+            } else {
+                Toast.makeText(requireContext(), "Please, Enter valid date", Toast.LENGTH_SHORT)
+                    .show()
+            }
             dismiss()
         }
     }
