@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.home.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -23,15 +22,15 @@ class HourlyAdapter(private val language: String) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), language)
+        holder.bind(getItem(position))
     }
 
     class MyViewHolder(private val binding: ItemHourlyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(hourly: Hourly, language: String) {
+        fun bind(hourly: Hourly) {
             binding.apply {
-                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it, language) }
+                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it) }
                 val strFormat: String = binding.root.context.getString(
                     R.string.hourly,
                     hourly.temp?.toInt(),

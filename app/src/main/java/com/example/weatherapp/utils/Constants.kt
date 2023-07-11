@@ -6,11 +6,8 @@ import android.content.res.Resources
 import android.location.Geocoder
 import android.os.Build
 import android.util.DisplayMetrics
-import androidx.core.text.TextUtilsCompat
-import androidx.core.view.ViewCompat
 import com.example.weatherapp.R
 import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.model.pojo.UserLocation
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -36,13 +33,13 @@ object Constants {
 
     const val ALERT_ID = "id"
 
-    fun convertLongToDayName(time: Long, language:String): String {
-        val format = SimpleDateFormat("EEEE", Locale(language))
+    fun convertLongToDayName(time: Long): String {
+        val format = SimpleDateFormat("EEEE", Locale.getDefault())
         return format.format(Date(time * 1000))
     }
 
-    fun convertLongToTime(time: Long, language:String): String {
-        val format = SimpleDateFormat("hh:mm aa", Locale(language))
+    fun convertLongToTime(time: Long): String {
+        val format = SimpleDateFormat("hh:mm aa",Locale.getDefault())
         return format.format(Date(time * 1000))
     }
 

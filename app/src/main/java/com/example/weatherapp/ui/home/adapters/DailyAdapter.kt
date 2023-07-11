@@ -1,6 +1,5 @@
 package com.example.weatherapp.ui.home.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemDailyBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.Daily
 import com.example.weatherapp.utils.Constants
 import com.example.weatherapp.utils.Constants.getTemperatureUnit
@@ -24,16 +22,16 @@ class DailyAdapter(private val language: String) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), language)
+        holder.bind(getItem(position))
     }
 
     class MyViewHolder(private val binding: ItemDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(daily: Daily, language: String) {
+        fun bind(daily: Daily) {
             binding.apply {
                 daily.dt?.let {
-                    tvDay.text = Constants.convertLongToDayName(it, language)
+                    tvDay.text = Constants.convertLongToDayName(it)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
 
