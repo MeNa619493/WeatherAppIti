@@ -2,9 +2,9 @@ package com.example.weatherapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.model.local.WeatherDatabase
-import com.example.weatherapp.utils.Constants.DATABASE_NAME
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.WeatherDatabase
+import com.example.weatherapp.utils.Utils.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

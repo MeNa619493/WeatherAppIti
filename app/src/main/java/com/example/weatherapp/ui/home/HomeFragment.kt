@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -28,18 +29,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentHomeBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.UserLocation
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.getSpeedUnit
-import com.example.weatherapp.utils.Constants.getTemperatureUnit
-import com.example.weatherapp.utils.Constants.setLocale
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.getSpeedUnit
+import com.example.weatherapp.utils.Utils.getTemperatureUnit
+import com.example.weatherapp.utils.Utils.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
+import com.example.weatherapp.utils.SnackbarUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -54,12 +56,8 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var sharedPreferences: HelperSharedPreferences
 
-    private val hourlyAdapter by lazy {
-        HourlyAdapter(getLanguageLocale())
-    }
-    private val dailyAdapter by lazy {
-        DailyAdapter(getLanguageLocale())
-    }
+    private val hourlyAdapter by lazy { HourlyAdapter() }
+    private val dailyAdapter by lazy { DailyAdapter() }
 
     @Inject
     lateinit var networkChangeListener: NetworkListener
@@ -103,31 +101,20 @@ class HomeFragment : Fragment() {
     private fun observeNetworkState() {
         NetworkListener.isNetworkAvailable.observe(viewLifecycleOwner) {
             if (it) {
-                hideNoConnectionViews()
                 if (getLat().isBlank() || getLong().isBlank()) {
                     getLastLocation()
                 } else {
                     val location = UserLocation(getLat().toDouble(), getLong().toDouble())
                     viewModel.locationLiveData.value = location
                 }
-            } else {
-                hideAllViews()
-                showNoConnectionViews()
+            } else{
+                SnackbarUtils.showSnackbar(
+                    binding.root,
+                    getString(R.string.no_connection),
+                    Color.RED
+                )
+                viewModel.getCachedWeather()
             }
-        }
-    }
-
-    private fun hideNoConnectionViews() {
-        binding.apply {
-            ivNoConnection.visibility = View.GONE
-            tvNoConnection.visibility = View.GONE
-        }
-    }
-
-    private fun showNoConnectionViews() {
-        binding.apply {
-            ivNoConnection.visibility = View.VISIBLE
-            tvNoConnection.visibility = View.VISIBLE
         }
     }
 
@@ -158,7 +145,7 @@ class HomeFragment : Fragment() {
         if (checkPermission()) {
             if (isLocationEnabled()) {
                 viewModel.requestNewLocationData()
-                if (sharedPreferences.getBoolean(Constants.IS_MAP, false)) {
+                if (sharedPreferences.getBoolean(Utils.IS_MAP, false)) {
                     findNavController().navigate(
                         HomeFragmentDirections.actionHomeFragmentToMapFragment(
                             false
@@ -250,14 +237,12 @@ class HomeFragment : Fragment() {
                         dailyAdapter.submitList(it.daily)
                         initUi(it)
 
-                        sharedPreferences.addString(Constants.LAT, it.lat.toString())
-                        sharedPreferences.addString(Constants.LONG, it.lon.toString())
+                        sharedPreferences.addString(Utils.LAT, it.lat.toString())
+                        sharedPreferences.addString(Utils.LONG, it.lon.toString())
                     }
                 }
                 is NetworkResult.Error -> {
                     hideShimmer()
-                    hideNoConnectionViews()
-                    hideNoConnectionViews()
                     Toast.makeText(requireContext(), "error", Toast.LENGTH_SHORT).show()
                 }
                 is NetworkResult.Loading -> {
@@ -272,10 +257,7 @@ class HomeFragment : Fragment() {
 
             weatherResponse.current?.let {
                 it.dt?.let { date ->
-                    tvDate.text = Constants.convertLongToDayDate(
-                        date,
-                        getLanguageLocale()
-                    )
+                    tvDate.text = Utils.convertLongToDayDate(date)
                 }
 
                 it.weather?.get(0)?.let { weather ->
@@ -338,11 +320,10 @@ class HomeFragment : Fragment() {
             )
             tvVisibilityDeg.text = visibilityFormat
 
-            binding.tvAddress.text = Constants.getAddress(
+            binding.tvAddress.text = Utils.getAddress(
                 requireContext(),
                 weatherResponse.lat ?: 0.0,
-                weatherResponse.lon ?: 0.0,
-                getLanguageLocale()
+                weatherResponse.lon ?: 0.0
             )
         }
     }
@@ -389,19 +370,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun getLanguageLocale(): String {
-        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+        return sharedPreferences.getString(Utils.LANGUAGE, "en")
     }
 
     private fun getUnits(): String {
-        return sharedPreferences.getString(Constants.UNIT, "metric")
+        return sharedPreferences.getString(Utils.UNIT, "metric")
     }
 
     private fun getLat(): String {
-        return sharedPreferences.getString(Constants.LAT, "")
+        return sharedPreferences.getString(Utils.LAT, "")
     }
 
     private fun getLong(): String {
-        return sharedPreferences.getString(Constants.LONG, "")
+        return sharedPreferences.getString(Utils.LONG, "")
     }
 
     override fun onDestroyView() {

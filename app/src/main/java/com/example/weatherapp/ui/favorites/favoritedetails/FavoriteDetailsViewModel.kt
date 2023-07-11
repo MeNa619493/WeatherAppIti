@@ -1,13 +1,11 @@
 package com.example.weatherapp.ui.favorites.favoritedetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.model.pojo.WeatherResponse
-import com.example.weatherapp.model.repos.Repo
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.model.data.repos.Repo
 import com.example.weatherapp.utils.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

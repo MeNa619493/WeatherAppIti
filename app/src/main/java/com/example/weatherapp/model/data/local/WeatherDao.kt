@@ -1,4 +1,4 @@
-package com.example.weatherapp.model.local
+package com.example.weatherapp.model.data.local
 
 import androidx.room.*
 import com.example.weatherapp.model.pojo.WeatherResponse
@@ -8,6 +8,12 @@ import kotlinx.coroutines.flow.Flow
 interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeather(weatherResponse: WeatherResponse)
+
+    @Query("Select * from WeatherResponse where isFavourite = 0")
+    suspend fun getCurrentWeather(): WeatherResponse
+
+    @Query("Delete from WeatherResponse where isFavourite = 0")
+    suspend fun deleteCurrentWeather()
 
     @Query("Select * from WeatherResponse")
     fun getAllWeather(): Flow<List<WeatherResponse>>

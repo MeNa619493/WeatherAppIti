@@ -1,11 +1,11 @@
-package com.example.weatherapp.model.repos
+package com.example.weatherapp.model.data.repos
 
-import com.example.weatherapp.model.local.AlertDao
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.model.local.WeatherDao
+import com.example.weatherapp.model.data.local.AlertDao
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.WeatherDao
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.pojo.WeatherResponse
-import com.example.weatherapp.model.remote.ApiService
+import com.example.weatherapp.model.data.remote.ApiService
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
@@ -28,8 +28,16 @@ class RepoImpl(
         weatherDao.insertWeather(weatherResponse)
     }
 
+    override suspend fun getCurrentWeather(): WeatherResponse {
+        return weatherDao.getCurrentWeather()
+    }
+
     override fun getAllWeather(): Flow<List<WeatherResponse>> {
         return weatherDao.getAllWeather()
+    }
+
+    override suspend fun deleteCurrentWeather() {
+        weatherDao.deleteCurrentWeather()
     }
 
     override suspend fun deleteWeather(weatherResponse: WeatherResponse) {

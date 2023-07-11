@@ -1,7 +1,7 @@
-package com.example.weatherapp.model.remote
+package com.example.weatherapp.model.data.remote
 
 import com.example.weatherapp.model.pojo.WeatherResponse
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Utils
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,6 +13,6 @@ interface ApiService {
         @Query("lon") lon: String,
         @Query("units") units: String,
         @Query("lang") lang: String,
-        @Query("appid") app_id: String = Constants.API_KEY
+        @Query("appid") app_id: String = Utils.API_KEY
     ): Response<WeatherResponse>
 }

@@ -1,4 +1,4 @@
-package com.example.weatherapp.model.repos
+package com.example.weatherapp.model.data.repos
 
 import androidx.room.Delete
 import androidx.room.Insert
@@ -18,7 +18,9 @@ interface Repo {
     ): Response<WeatherResponse>
 
     suspend fun insertWeather(weatherResponse: WeatherResponse)
+    suspend fun getCurrentWeather(): WeatherResponse
     fun getAllWeather(): Flow<List<WeatherResponse>>
+    suspend fun deleteCurrentWeather()
     suspend fun deleteWeather(weatherResponse: WeatherResponse)
     suspend fun insertAlert(weatherAlert: WeatherAlert): Long
     fun getAllAerts(currentTime: Long): Flow<List<WeatherAlert>>

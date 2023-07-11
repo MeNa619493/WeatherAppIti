@@ -10,8 +10,8 @@ import androidx.fragment.app.DialogFragment
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentChooseDialogBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -40,9 +40,9 @@ class ChooseDialogFragment : DialogFragment() {
 
         binding.btnOk.setOnClickListener {
             if (binding.radioGroup.checkedRadioButtonId == R.id.radio_gps) {
-                sharedPreferences.addBoolean(Constants.IS_MAP, false)
+                sharedPreferences.addBoolean(Utils.IS_MAP, false)
             } else if (binding.radioGroup.checkedRadioButtonId == R.id.radio_maps) {
-                sharedPreferences.addBoolean(Constants.IS_MAP, true)
+                sharedPreferences.addBoolean(Utils.IS_MAP, true)
             }
             startMainActivity()
         }

@@ -1,5 +1,6 @@
 package com.example.weatherapp.model.repos
 
+import com.example.weatherapp.model.data.repos.Repo
 import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.pojo.WeatherResponse
 import kotlinx.coroutines.flow.Flow

@@ -1,11 +1,11 @@
 package com.example.weatherapp.di
 
-import com.example.weatherapp.model.local.AlertDao
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.model.local.WeatherDao
-import com.example.weatherapp.model.remote.ApiService
-import com.example.weatherapp.model.repos.Repo
-import com.example.weatherapp.model.repos.RepoImpl
+import com.example.weatherapp.model.data.local.AlertDao
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.WeatherDao
+import com.example.weatherapp.model.data.remote.ApiService
+import com.example.weatherapp.model.data.repos.Repo
+import com.example.weatherapp.model.data.repos.RepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

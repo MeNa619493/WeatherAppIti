@@ -17,18 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavoriteDetailsBinding
-import com.example.weatherapp.databinding.FragmentFavoritesBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.home.adapters.DailyAdapter
 import com.example.weatherapp.ui.home.adapters.HourlyAdapter
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.getSpeedUnit
-import com.example.weatherapp.utils.Constants.getTemperatureUnit
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.getSpeedUnit
+import com.example.weatherapp.utils.Utils.getTemperatureUnit
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.NetworkResult
 import com.example.weatherapp.utils.SnackbarUtils
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,8 +42,8 @@ class FavoriteDetailsFragment : Fragment() {
     @Inject
     lateinit var networkChangeListener: NetworkListener
 
-    private val hourlyAdapter by lazy { HourlyAdapter(getLanguageLocale()) }
-    private val dailyAdapter by lazy { DailyAdapter(getLanguageLocale()) }
+    private val hourlyAdapter by lazy { HourlyAdapter() }
+    private val dailyAdapter by lazy { DailyAdapter() }
 
     val viewModel: FavoriteDetailsViewModel by viewModels()
     private val args: FavoriteDetailsFragmentArgs by navArgs()
@@ -134,10 +132,7 @@ class FavoriteDetailsFragment : Fragment() {
 
             weatherResponse.current?.let {
                 it.dt?.let { date ->
-                    tvDate.text = Constants.convertLongToDayDate(
-                        date,
-                        getLanguageLocale()
-                    )
+                    tvDate.text = Utils.convertLongToDayDate(date)
                 }
 
                 it.weather?.get(0)?.let { weather ->
@@ -200,11 +195,10 @@ class FavoriteDetailsFragment : Fragment() {
             )
             tvVisibilityDeg.text = visibilityFormat
 
-            binding.tvAddress.text = Constants.getAddress(
+            binding.tvAddress.text = Utils.getAddress(
                 requireContext(),
                 weatherResponse.lat ?: 0.0,
                 weatherResponse.lon ?: 0.0,
-                getLanguageLocale()
             )
         }
     }
@@ -250,11 +244,11 @@ class FavoriteDetailsFragment : Fragment() {
     }
 
     private fun getLanguageLocale(): String {
-        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+        return sharedPreferences.getString(Utils.LANGUAGE, "en")
     }
 
     private fun getUnits(): String {
-        return sharedPreferences.getString(Constants.UNIT, "metric")
+        return sharedPreferences.getString(Utils.UNIT, "metric")
     }
 
     override fun onDestroyView() {

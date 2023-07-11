@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.databinding.FavItemBinding
 import com.example.weatherapp.model.pojo.WeatherResponse
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Utils
 
 class FavoritesAdapter(
     private val context: Context,
-    private val language: String,
     private val clickListener: WeatherResponseClickListener
 ) : ListAdapter<WeatherResponse, FavoritesAdapter.MyViewHolder>(
     WeatherResponseDiffCallback()
@@ -23,7 +22,7 @@ class FavoritesAdapter(
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, context, language)
+        holder.bind(getItem(position), clickListener, context)
     }
 
     interface WeatherResponseClickListener {
@@ -34,9 +33,9 @@ class FavoritesAdapter(
     class MyViewHolder(private val binding: FavItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(weatherResponse: WeatherResponse, clickListener: WeatherResponseClickListener, context: Context, language: String) {
+        fun bind(weatherResponse: WeatherResponse, clickListener: WeatherResponseClickListener, context: Context) {
             binding.apply {
-                tvLocation.text = Constants.getAddress(context, weatherResponse.lat ?:0.0, weatherResponse.lon ?:0.0, language)
+                tvLocation.text = Utils.getAddress(context, weatherResponse.lat ?:0.0, weatherResponse.lon ?:0.0)
 
                 layout.setOnClickListener {
                     clickListener.onItemClicked(weatherResponse)

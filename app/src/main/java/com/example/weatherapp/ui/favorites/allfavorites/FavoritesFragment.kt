@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavoritesBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.setLocale
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.SnackbarUtils
 import com.google.android.material.snackbar.Snackbar
@@ -47,7 +47,6 @@ class FavoritesFragment : Fragment() {
     private val favoritesAdapter by lazy {
         FavoritesAdapter(
             requireContext(),
-            getLanguageLocale(),
             object : FavoritesAdapter.WeatherResponseClickListener {
                 override fun onItemClicked(weatherResponse: WeatherResponse) {
                     findNavController().navigate(
@@ -204,7 +203,7 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun getLanguageLocale(): String {
-        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+        return sharedPreferences.getString(Utils.LANGUAGE, "en")
     }
 
     override fun onDestroyView() {

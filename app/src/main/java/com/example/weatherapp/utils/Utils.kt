@@ -7,12 +7,12 @@ import android.location.Geocoder
 import android.os.Build
 import android.util.DisplayMetrics
 import com.example.weatherapp.R
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-object Constants {
+object Utils {
     const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     const val API_KEY = "cad8edbd7bf4c844f7347d7fa46298b3"
     const val DATABASE_NAME = "WeatherDatabase"
@@ -54,35 +54,27 @@ object Constants {
         res.updateConfiguration(conf, dm)
     }
 
-    fun convertLongToDayDate(time: Long, language:String): String {
-        val format = SimpleDateFormat("d MMM, yyyy", Locale(language))
+    fun convertLongToDayDate(time: Long): String {
+        val format = SimpleDateFormat("d MMM, yyyy", Locale.getDefault())
         return format.format(time * 1000)
     }
 
-    fun getDateMillis(date: String, language:String): Long {
-        val f = SimpleDateFormat("dd/MM/yyyy", Locale(language))
+    fun getDateMillis(date: String): Long {
+        val f = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val d: Date = f.parse(date)
         return d.time
     }
 
-    fun convertLongToDayDateAlert(time: Long, language:String): String {
+    fun convertLongToDayDateAlert(time: Long): String {
         val date = Date(time)
-        val format = SimpleDateFormat("dd/MM/yyyy", Locale(language))
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return format.format(date)
     }
 
-    fun convertLongToTimePicker(time: Long, language:String): String {
+    fun convertLongToTimePicker(time: Long): String {
         val date = Date(time - 7200000)
-        val format = SimpleDateFormat("h:mm aa", Locale(language))
+        val format = SimpleDateFormat("h:mm aa", Locale.getDefault())
         return format.format(date)
-    }
-
-    fun getCurrentLocale(context: Context): Locale? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.resources.configuration.locales[0]
-        } else {
-            context.resources.configuration.locale
-        }
     }
 
     fun getSpeedUnit(context: Context): String {
@@ -112,9 +104,9 @@ object Constants {
         }
     }
 
-    fun getAddress(context: Context, lat: Double, lon: Double, language:String): String {
+    fun getAddress(context: Context, lat: Double, lon: Double): String {
         var address = " "
-        val geocoder = Geocoder(context, Locale(language))
+        val geocoder = Geocoder(context, Locale.getDefault())
         try {
             val addressList = geocoder.getFromLocation(lat, lon, 1)
             if (addressList != null) {

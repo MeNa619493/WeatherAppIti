@@ -6,6 +6,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import app.cash.turbine.test
 import com.example.weatherapp.TestDispatcherRule
+import com.example.weatherapp.model.data.local.AlertDao
+import com.example.weatherapp.model.data.local.WeatherDatabase
 import com.example.weatherapp.model.pojo.*
 import kotlinx.coroutines.test.runTest
 import org.junit.After

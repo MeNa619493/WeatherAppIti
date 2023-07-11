@@ -1,12 +1,9 @@
 package com.example.weatherapp.ui.settings
 
 import android.content.IntentFilter
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +13,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentSettingsBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.setLocale
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.SnackbarUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,7 +46,7 @@ class SettingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLocale(sharedPreferences.getString(Constants.LANGUAGE, "en"), requireContext())
+        setLocale(sharedPreferences.getString(Utils.LANGUAGE, "en"), requireContext())
     }
 
     override fun onCreateView(
@@ -163,25 +158,25 @@ class SettingsFragment : Fragment() {
 
     private fun getOldSettings() {
         sharedPreferences.apply {
-            oldUnitSetting = getString(Constants.UNIT, "metric")
-            oldLanguageSetting = getString(Constants.LANGUAGE, "en")
-            oldLocationSetting = getBoolean(Constants.IS_MAP, false)
+            oldUnitSetting = getString(Utils.UNIT, "metric")
+            oldLanguageSetting = getString(Utils.LANGUAGE, "en")
+            oldLocationSetting = getBoolean(Utils.IS_MAP, false)
         }
     }
 
     private fun saveSettingsToSharedPreferences() {
         sharedPreferences.apply {
-            addString(Constants.UNIT, selectedUnitSetting)
-            addString(Constants.LANGUAGE, selectedLanguageSetting)
-            addBoolean(Constants.IS_MAP, selectedLocationSetting)
+            addString(Utils.UNIT, selectedUnitSetting)
+            addString(Utils.LANGUAGE, selectedLanguageSetting)
+            addBoolean(Utils.IS_MAP, selectedLocationSetting)
         }
     }
 
 
     private fun changeLocationData() {
         sharedPreferences.apply {
-            addString(Constants.LAT, "")
-            addString(Constants.LONG, "")
+            addString(Utils.LAT, "")
+            addString(Utils.LONG, "")
         }
     }
 

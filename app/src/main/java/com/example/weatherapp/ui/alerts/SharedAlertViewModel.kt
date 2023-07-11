@@ -2,7 +2,7 @@ package com.example.weatherapp.ui.alerts
 
 import androidx.lifecycle.*
 import com.example.weatherapp.model.pojo.WeatherAlert
-import com.example.weatherapp.model.repos.Repo
+import com.example.weatherapp.model.data.repos.Repo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

@@ -11,17 +11,16 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
-import androidx.core.app.JobIntentService.enqueueWork
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.weatherapp.ui.MainActivity
 import com.example.weatherapp.R
-import com.example.weatherapp.model.local.HelperSharedPreferences
-import com.example.weatherapp.model.repos.Repo
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.repos.Repo
 import com.example.weatherapp.utils.AlertWindowOverlay
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Utils
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
@@ -35,7 +34,7 @@ class HourlyWorkManger @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val id = inputData.getInt(Constants.ALERT_ID, 0)
+        val id = inputData.getInt(Utils.ALERT_ID, 0)
         withContext(Dispatchers.IO){
             startAlert(id)
         }
@@ -45,10 +44,10 @@ class HourlyWorkManger @AssistedInject constructor(
 
     private suspend fun startAlert(id: Int) {
         val weatherResponse = repo.getCurrentWeather(
-            sharedPreferences.getString(Constants.LAT, "0.0"),
-            sharedPreferences.getString(Constants.LONG, "0.0"),
-            sharedPreferences.getString(Constants.UNIT, "metric"),
-            sharedPreferences.getString(Constants.LANGUAGE, "en")
+            sharedPreferences.getString(Utils.LAT, "0.0"),
+            sharedPreferences.getString(Utils.LONG, "0.0"),
+            sharedPreferences.getString(Utils.UNIT, "metric"),
+            sharedPreferences.getString(Utils.LANGUAGE, "en")
         )
         val currentWeather = weatherResponse.body()
 
@@ -72,7 +71,7 @@ class HourlyWorkManger @AssistedInject constructor(
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, 0)
         val notification =
-            NotificationCompat.Builder(applicationContext, Constants.NOTIFICATION_CHANNEL)
+            NotificationCompat.Builder(applicationContext, Utils.NOTIFICATION_CHANNEL)
                 .setContentTitle("Weather Status")
                 .setContentText(description)
                 .setSmallIcon(R.drawable.cloudy_sunny)
@@ -84,7 +83,7 @@ class HourlyWorkManger @AssistedInject constructor(
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notification.setChannelId(Constants.NOTIFICATION_CHANNEL)
+        notification.setChannelId(Utils.NOTIFICATION_CHANNEL)
 
         val ringtone =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + context.packageName + "/" + R.raw.antonio_vivaldi_storm)
@@ -93,8 +92,8 @@ class HourlyWorkManger @AssistedInject constructor(
             .build()
 
         val channel = NotificationChannel(
-            Constants.NOTIFICATION_CHANNEL,
-            Constants.NOTIFICATION_NAME,
+            Utils.NOTIFICATION_CHANNEL,
+            Utils.NOTIFICATION_NAME,
             NotificationManager.IMPORTANCE_HIGH
         )
 

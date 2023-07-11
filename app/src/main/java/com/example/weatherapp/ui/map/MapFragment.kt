@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.map
 
 import android.annotation.SuppressLint
-import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -9,19 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.weatherapp.R
-import com.example.weatherapp.databinding.FragmentHomeBinding
 import com.example.weatherapp.databinding.FragmentMapBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.UserLocation
 import com.example.weatherapp.ui.SharedViewModel
-import com.example.weatherapp.utils.Constants
+import com.example.weatherapp.utils.Utils
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -37,8 +32,6 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 
@@ -126,8 +119,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             if (args.isFav) {
                 saveFavLocation(location)
             } else {
-                sharedPreferences.addString(Constants.LAT, location.lat.toString())
-                sharedPreferences.addString(Constants.LONG, location.lon.toString())
+                sharedPreferences.addString(Utils.LAT, location.lat.toString())
+                sharedPreferences.addString(Utils.LONG, location.lon.toString())
                 viewModel.locationLiveData.value = location
             }
         }
@@ -191,11 +184,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getLanguageLocale(): String {
-        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+        return sharedPreferences.getString(Utils.LANGUAGE, "en")
     }
 
     private fun getUnits(): String {
-        return sharedPreferences.getString(Constants.UNIT, "metric")
+        return sharedPreferences.getString(Utils.UNIT, "metric")
     }
 
     override fun onDestroyView() {

@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class WeatherResponse(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
+    var isFavourite:Boolean = false,
     val current: Current?,
     val daily: List<Daily>?,
     val hourly: List<Hourly>?,

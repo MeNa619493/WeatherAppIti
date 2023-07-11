@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemHourlyBinding
 import com.example.weatherapp.model.pojo.Hourly
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.getTemperatureUnit
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.getTemperatureUnit
 
-class HourlyAdapter(private val language: String) :
+class HourlyAdapter :
     ListAdapter<Hourly, HourlyAdapter.MyViewHolder>(
         HourlyDiffCallback()
     ) {
@@ -30,7 +30,7 @@ class HourlyAdapter(private val language: String) :
 
         fun bind(hourly: Hourly) {
             binding.apply {
-                tvHour.text = hourly.dt?.let { Constants.convertLongToTime(it) }
+                tvHour.text = hourly.dt?.let { Utils.convertLongToTime(it) }
                 val strFormat: String = binding.root.context.getString(
                     R.string.hourly,
                     hourly.temp?.toInt(),

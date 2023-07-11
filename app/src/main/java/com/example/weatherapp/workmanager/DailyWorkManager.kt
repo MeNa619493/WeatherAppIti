@@ -5,13 +5,12 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.example.weatherapp.model.pojo.WeatherAlert
-import com.example.weatherapp.model.repos.Repo
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.getDateMillis
+import com.example.weatherapp.model.data.repos.Repo
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.getDateMillis
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
-import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -50,7 +49,7 @@ class DailyWorkManager @AssistedInject constructor(
         val month = Calendar.getInstance().get(Calendar.MONTH)
         val day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val date = "$day/${month + 1}/$year"
-        val currentDay = getDateMillis(date, "en")
+        val currentDay = getDateMillis(date)
         return currentDay >= alert.startDate && currentDay <= alert.endDate
     }
 
@@ -64,7 +63,7 @@ class DailyWorkManager @AssistedInject constructor(
 
     private fun setHourlyWorkManger(delay: Long, id: Int) {
         val data = Data.Builder()
-        data.putInt(Constants.ALERT_ID, id)
+        data.putInt(Utils.ALERT_ID, id)
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)

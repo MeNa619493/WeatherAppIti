@@ -1,7 +1,7 @@
 package com.example.weatherapp.di
 
-import com.example.weatherapp.model.remote.ApiService
-import com.example.weatherapp.utils.Constants.BASE_URL
+import com.example.weatherapp.model.data.remote.ApiService
+import com.example.weatherapp.utils.Utils.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

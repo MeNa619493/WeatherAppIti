@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -13,9 +12,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -24,20 +21,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentAlertsBinding
-import com.example.weatherapp.model.local.HelperSharedPreferences
+import com.example.weatherapp.model.data.local.HelperSharedPreferences
 import com.example.weatherapp.model.pojo.WeatherAlert
-import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.alerts.SharedAlertViewModel
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.setLocale
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.setLocale
 import com.example.weatherapp.utils.NetworkListener
 import com.example.weatherapp.utils.SnackbarUtils
 import com.example.weatherapp.workmanager.DailyWorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -56,7 +49,7 @@ class AlertsFragment : Fragment() {
     lateinit var sharedPreferences: HelperSharedPreferences
 
     private val alertsAdapter by lazy {
-        AlertsAdapter( getLanguageLocale(),
+        AlertsAdapter(
             object : AlertsAdapter.AlertClickListener {
                 override fun onDeleteItemClicked(weatherAlert: WeatherAlert) {
                     showAlertDialog(weatherAlert)
@@ -77,7 +70,6 @@ class AlertsFragment : Fragment() {
         _binding = FragmentAlertsBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -257,7 +249,7 @@ class AlertsFragment : Fragment() {
     }
 
     private fun getLanguageLocale(): String {
-        return sharedPreferences.getString(Constants.LANGUAGE, "en")
+        return sharedPreferences.getString(Utils.LANGUAGE, "en")
     }
 
     companion object {

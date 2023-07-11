@@ -9,10 +9,10 @@ import com.bumptech.glide.Glide
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.ItemDailyBinding
 import com.example.weatherapp.model.pojo.Daily
-import com.example.weatherapp.utils.Constants
-import com.example.weatherapp.utils.Constants.getTemperatureUnit
+import com.example.weatherapp.utils.Utils
+import com.example.weatherapp.utils.Utils.getTemperatureUnit
 
-class DailyAdapter(private val language: String) :
+class DailyAdapter :
     ListAdapter<Daily, DailyAdapter.MyViewHolder>(
         DailyDiffCallback()
     ) {
@@ -31,7 +31,7 @@ class DailyAdapter(private val language: String) :
         fun bind(daily: Daily) {
             binding.apply {
                 daily.dt?.let {
-                    tvDay.text = Constants.convertLongToDayName(it)
+                    tvDay.text = Utils.convertLongToDayName(it)
                 }
                 tvDayStatus.text = daily.weather?.get(0)?.description ?: ""
 

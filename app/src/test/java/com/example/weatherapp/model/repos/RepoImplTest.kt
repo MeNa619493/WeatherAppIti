@@ -1,12 +1,14 @@
 package com.example.weatherapp.model.repos
 
 import com.example.weatherapp.MainCoroutineRule
-import com.example.weatherapp.model.local.AlertDao
-import com.example.weatherapp.model.local.WeatherDao
-import com.example.weatherapp.model.local.WeatherDatabase
+import com.example.weatherapp.model.data.local.AlertDao
+import com.example.weatherapp.model.data.local.WeatherDao
+import com.example.weatherapp.model.data.local.WeatherDatabase
 import com.example.weatherapp.model.pojo.*
 import kotlinx.coroutines.flow.Flow
-import com.example.weatherapp.model.remote.ApiService
+import com.example.weatherapp.model.data.remote.ApiService
+import com.example.weatherapp.model.data.repos.Repo
+import com.example.weatherapp.model.data.repos.RepoImpl
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import org.mockito.Mockito.verify
