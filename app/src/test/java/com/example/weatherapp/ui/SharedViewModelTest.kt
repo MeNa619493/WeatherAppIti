@@ -9,12 +9,12 @@ import com.example.weatherapp.model.pojo.Hourly
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.model.repos.FakeRepo
 import com.google.android.gms.location.FusedLocationProviderClient
+import io.mockk.unmockkAll
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
 import org.hamcrest.CoreMatchers.*
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -39,6 +39,7 @@ class SharedViewModelTest {
 
     private val weather1 = WeatherResponse(
         1,
+        false,
         null,
         listOf<Daily>(),
         listOf<Hourly>(),
@@ -49,8 +50,9 @@ class SharedViewModelTest {
         listOf<Alert>()
     )
 
-    val weather2 = WeatherResponse(
+    private val weather2 = WeatherResponse(
         2,
+        true,
         null,
         listOf<Daily>(),
         listOf<Hourly>(),
@@ -69,6 +71,12 @@ class SharedViewModelTest {
         viewModel = SharedViewModel(repository, mFusedLocationProviderClient)
     }
 
+    @After
+    fun cleanup() {
+        // Clear all mock interactions
+        unmockkAll()
+    }
+
     @Test
     fun getCurrentWeather_shouldSuccess() {
         // When
@@ -82,7 +90,7 @@ class SharedViewModelTest {
     }
 
     @Test
-    fun getCurrentWeather_shouldFail() {
+    fun getCurrentWeather_shouldFail_returnCashedWeather() {
         //Given
         repository.setReturnError(true)
 
@@ -92,41 +100,48 @@ class SharedViewModelTest {
         // Then
         val value = viewModel.weather.getOrAwaitValue()
 
-        Assert.assertThat(value.data, `is`(nullValue()))
+        Assert.assertThat(value.data?.isFavourite, `is`(false))
     }
 
     @Test
-    fun saveFavLocationWeather_shouldReturnSizeOfWeatherData() {
+    fun saveFavLocationWeather_shouldReturnSizeOfFavouriteWeatherData() {
         // When
         viewModel.saveFavLocationWeather("","","","")
 
         // Then
-        Assert.assertEquals(repository.weatherData.size, 2)
+        val result = repository.weatherData.count { it.isFavourite }
+        Assert.assertEquals(result, 2)
     }
 
     @Test
-    fun addFavLocation_shouldReturnSizeOfWeatherData() {
+    fun addFavLocation_shouldReturnSizeOfFavouriteWeatherData() {
         // When
         viewModel.addFavLocation(weather2)
 
         // Then
-        Assert.assertEquals(repository.weatherData.size, 2)
+        val result = repository.weatherData.count { it.isFavourite }
+        Assert.assertEquals(result, 1)
     }
 
     @Test
-    fun getAllFavs_returnAllWeathers() {
+    fun getAllFavs_returnAllFavouriteWeathers() {
+        //Given
+        repository.weatherData.add(weather2)
+
         // When
         val value = viewModel.getAllFavs().getOrAwaitValue()
 
         // Then
         Assert.assertThat(value, not(nullValue()))
-        Assert.assertEquals(value[0], weather1)
+        Assert.assertEquals(value[0], weather2)
     }
 
     @Test
-    fun deleteAlert_returnId() {
+    fun deleteFav_shouldReturnSizeOfWeatherData() {
+        //Given
+        repository.weatherData.add(weather2)
+
         // When
-        viewModel.addFavLocation(weather2)
         viewModel.deleteFav(weather2)
 
         // Then

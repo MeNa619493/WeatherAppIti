@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.FragmentFavoritesBinding
 import com.example.weatherapp.model.data.local.HelperSharedPreferences
+import com.example.weatherapp.model.pojo.WeatherAlert
 import com.example.weatherapp.model.pojo.WeatherResponse
 import com.example.weatherapp.ui.SharedViewModel
 import com.example.weatherapp.utils.Utils
@@ -164,13 +165,13 @@ class FavoritesFragment : Fragment() {
 
     private fun showAlertDialog(weatherResponse: WeatherResponse) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Alert")
-        builder.setMessage("Are you sure you want to delete this item ?")
+        builder.setTitle(resources.getString(R.string.delete_alert))
+        builder.setMessage(resources.getString(R.string.delete_message))
         builder.setIcon(android.R.drawable.ic_dialog_alert)
-        builder.setPositiveButton("Yes") { _, _ ->
+        builder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
             viewModel.deleteFav(weatherResponse)
         }
-        builder.setNegativeButton("Cancel") { dialogInterface, _ ->
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
 
@@ -192,9 +193,9 @@ class FavoritesFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val deletedItem: WeatherResponse = favList[viewHolder.adapterPosition]
                 viewModel.deleteFav(deletedItem)
-                Snackbar.make(binding.rvFavs, "Item Deleted", Snackbar.LENGTH_LONG)
+                Snackbar.make(binding.rvFavs, resources.getString(R.string.swipe_delete), Snackbar.LENGTH_LONG)
                     .setAction(
-                        "Undo",
+                        resources.getString(R.string.undo),
                         View.OnClickListener {
                             viewModel.addFavLocation(deletedItem)
                         }).show()

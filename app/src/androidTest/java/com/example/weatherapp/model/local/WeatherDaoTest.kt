@@ -47,6 +47,7 @@ class WeatherDaoTest {
     fun insertWeatherItem_shouldReturn_theItem_inFlow() = runTest  {
         val weather = WeatherResponse(
             1,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -69,6 +70,7 @@ class WeatherDaoTest {
     fun deletedWeatherItem_shouldNot_be_present_inFlow() = runTest {
         val weather1 = WeatherResponse(
             1,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -80,6 +82,7 @@ class WeatherDaoTest {
         )
         val weather2 = WeatherResponse(
             2,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -106,6 +109,7 @@ class WeatherDaoTest {
     fun updateItem_shouldReturn_theItem_inFlow() = runTest {
         val weather1 = WeatherResponse(
             1,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -117,6 +121,7 @@ class WeatherDaoTest {
         )
         val weather2 = WeatherResponse(
             2,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),

@@ -61,4 +61,16 @@
     <string name="cloud_deg">%1$d %2$s</string>
     <string name="uv_deg">%1$d %2$s</string>
     <string name="visibility_deg">%1$d %2$s</string>
+
+    <string name="delete_alert">أنتبه</string>
+    <string name="delete_message">هل تريد الحذف ؟</string>
+    <string name="yes">نعم</string>
+    <string name="cancel">الغاء</string>
+
+    <string name="swipe_delete">تم الحذف</string>
+    <string name="undo">رجوع</string>
+
+    <string name="alert_permission_message">يرجي الموافقة لكي نستطيع بدأ التنبيهات</string>
+
+    <string name="valid_date">يرجي ادخال تاريخ صالح</string>
 </resources>

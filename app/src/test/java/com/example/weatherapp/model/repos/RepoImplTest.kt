@@ -65,6 +65,7 @@ class RepoImplTest {
             // Mock the API response
             val weatherResponse = WeatherResponse(
                 1,
+                false,
                 null,
                 listOf<Daily>(),
                 listOf<Hourly>(),
@@ -74,6 +75,7 @@ class RepoImplTest {
                 null,
                 listOf<Alert>()
             )
+
             `when`(
                 apiService.getCurrentWeather(
                     anyString(),
@@ -91,9 +93,37 @@ class RepoImplTest {
         }
 
     @Test
+    fun `getCurrentWeather with no parameters should return cached weather`() =
+        runBlocking {
+            // Mock the API response
+            val weatherResponse = WeatherResponse(
+                1,
+                false,
+                null,
+                listOf<Daily>(),
+                listOf<Hourly>(),
+                null,
+                null,
+                null,
+                null,
+                listOf<Alert>()
+            )
+
+            `when`(weatherDao.getCurrentWeather()).thenReturn(weatherResponse)
+
+            // Invoke the function under test
+            val result = repoImpl.getCurrentWeather()
+
+            assertEquals(result, weatherResponse)
+            assertEquals(result.isFavourite, false)
+        }
+
+
+    @Test
     fun `insertWeather should success when call insert in weather dao`() = runBlocking {
         val weatherResponse = WeatherResponse(
             1,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -112,11 +142,12 @@ class RepoImplTest {
     }
 
     @Test
-    fun `getAllWeather should success when flow of weathers`() =
+    fun `getAllWeather should success when return flow of weathers`() =
         runBlocking {
 
             val weatherResponse = WeatherResponse(
                 1,
+                false,
                 null,
                 listOf<Daily>(),
                 listOf<Hourly>(),
@@ -140,9 +171,10 @@ class RepoImplTest {
         }
 
     @Test
-    fun `deleteWeather should success when call delete in weather dao`() = runBlocking {
+    fun `deleteWeather should success when call delete weather in weather dao`() = runBlocking {
         val weatherResponse = WeatherResponse(
             1,
+            false,
             null,
             listOf<Daily>(),
             listOf<Hourly>(),
@@ -156,12 +188,21 @@ class RepoImplTest {
         // Invoke the function under test
         repoImpl.deleteWeather(weatherResponse)
 
-        // Verify that the insertWeather method was called with the correct data
+        // Verify that the deleteWeather method was called with the correct data
         verify(weatherDao).deleteWeather(weatherResponse)
     }
 
     @Test
-    fun `insertAlert should success when call insert in alert dao`() = runBlocking {
+    fun `deleteCurrentWeather with no parameters should success when call delete in weather dao`() = runBlocking {
+        // Invoke the function under test
+        repoImpl.deleteCurrentWeather()
+
+        // Verify that the deleteCurrentWeather method was called with the correct data
+        verify(weatherDao).deleteCurrentWeather()
+    }
+
+    @Test
+    fun `insertAlert should success when call insert alert in alert dao`() = runBlocking {
         val alert = WeatherAlert(
             1,
             0.0.toLong(),
@@ -180,28 +221,37 @@ class RepoImplTest {
     }
 
     @Test
-    fun `getAllAerts should success when flow of alerts`() =
+    fun `getAllAlerts with timestamp parameter should success when return flow of alerts`() =
         runBlocking {
 
             val alert = WeatherAlert(
                 1,
                 0.0.toLong(),
-                0.0.toLong(),
+                0.0.toLong() ,
                 0.0.toLong(),
                 0.0.toLong()
             )
 
             // Mock the DAO
-            `when`(alertDao.getAllAerts()).thenReturn(flowOf(listOf(alert)))
+            `when`(alertDao.getAllAerts(0.0.toLong())).thenReturn(flowOf(listOf(alert)))
 
             // Invoke the function under test
-            val result = repoImpl.getAllAerts()
+            val result = repoImpl.getAllAerts(0.0.toLong())
 
             // Collect the flow and verify the emitted objects
             val items = mutableListOf<List<WeatherAlert>>()
             result.collect { items.add(it) }
             assertEquals(alert, items[0].first())
         }
+
+    @Test
+    fun `deleteAlerts with timestamp parameter should success when call delete alert in alert dao`() = runBlocking {
+        // Invoke the function under test
+        repoImpl.deleteAlerts(0.0.toLong())
+
+        // Verify that the deleteAlerts method was called with the correct data
+        verify(alertDao).deleteAlerts(0.0.toLong())
+    }
 
     @Test
     fun `deleteAlert should success when call delete in alert dao`() = runBlocking {

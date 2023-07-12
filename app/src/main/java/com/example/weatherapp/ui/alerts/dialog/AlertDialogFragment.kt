@@ -88,7 +88,7 @@ class AlertDialogFragment : DialogFragment() {
                 viewModel.saveWeatherAlert(alert)
                 Log.e("AlertDialogFragment", "save clicked")
             } else {
-                Toast.makeText(requireContext(), "Please, Enter valid date", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), resources.getString(R.string.valid_date), Toast.LENGTH_SHORT)
                     .show()
             }
             dismiss()

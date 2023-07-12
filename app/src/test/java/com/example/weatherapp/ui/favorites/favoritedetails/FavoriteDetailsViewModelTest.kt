@@ -36,6 +36,7 @@ class FavoriteDetailsViewModelTest {
 
     private val weather1 = WeatherResponse(
         1,
+        true,
         null,
         listOf<Daily>(),
         listOf<Hourly>(),
@@ -75,7 +76,6 @@ class FavoriteDetailsViewModelTest {
 
         // Then
         val value = viewModel.weather.getOrAwaitValue()
-
         assertThat(value.data, `is`(nullValue()))
     }
 }

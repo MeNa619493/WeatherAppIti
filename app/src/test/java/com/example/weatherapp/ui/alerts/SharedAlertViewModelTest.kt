@@ -32,19 +32,28 @@ class SharedAlertViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    val alert1 = WeatherAlert(
+    private val alert1 = WeatherAlert(
         1,
         0.0.toLong(),
+        System.currentTimeMillis() + 50L,
         0.0.toLong(),
-        0.0.toLong(),
-        0.0.toLong()
+        System.currentTimeMillis()
     )
-    val alert2 = WeatherAlert(
+
+    private val alert2 = WeatherAlert(
         2,
         0.0.toLong(),
+        System.currentTimeMillis() + 50L,
         0.0.toLong(),
+        System.currentTimeMillis()
+    )
+
+    private val alert3 = WeatherAlert(
+        2,
         0.0.toLong(),
-        0.0.toLong()
+        System.currentTimeMillis() - 50L,
+        0.0.toLong(),
+        -50L
     )
 
     @Before
@@ -55,7 +64,7 @@ class SharedAlertViewModelTest {
     }
 
     @Test
-    fun getAllAlerts_returnAlerts() {
+    fun getAllAlerts_returnAllAlerts() {
         // When
         val value = viewModel.getAllAlerts().getOrAwaitValue()
 
@@ -99,5 +108,19 @@ class SharedAlertViewModelTest {
         }
 
         assertEquals(alert2.id, result)
+    }
+
+    @Test
+    fun deleteAlerts_shouldDeleteAlert3() {
+        //Given
+        repository.alertData.add(alert3)
+
+        // When
+        viewModel.deleteAlerts()
+
+        // Then
+        val value = viewModel.getAllAlerts().getOrAwaitValue()
+        assertThat(value, not(nullValue()))
+        assertEquals(value.size, 1)
     }
 }

@@ -152,13 +152,13 @@ class AlertsFragment : Fragment() {
 
     private fun showAlertDialog(weatherAlert: WeatherAlert) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Alert")
-        builder.setMessage("Are you sure you want to delete this item ?")
+        builder.setTitle(resources.getString(R.string.delete_alert))
+        builder.setMessage(resources.getString(R.string.delete_message))
         builder.setIcon(android.R.drawable.ic_dialog_alert)
-        builder.setPositiveButton("Yes") { _, _ ->
+        builder.setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
             viewModel.deleteAlert(weatherAlert)
         }
-        builder.setNegativeButton("Cancel") { dialogInterface, _ ->
+        builder.setNegativeButton(resources.getString(R.string.cancel)) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
 
@@ -183,9 +183,9 @@ class AlertsFragment : Fragment() {
 
     private fun requestPermission() {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-        alertDialogBuilder.setTitle("Alert")
-            .setMessage("Need Your Permission to set alarms")
-            .setPositiveButton("Yes") { dialog: DialogInterface, _: Int ->
+        alertDialogBuilder.setTitle(resources.getString(R.string.delete_alert))
+            .setMessage(resources.getString(R.string.alert_permission_message))
+            .setPositiveButton(resources.getString(R.string.yes)) { dialog: DialogInterface, _: Int ->
                 val intent = Intent(
                     Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                     Uri.parse("package:" + requireActivity().packageName)
@@ -196,7 +196,7 @@ class AlertsFragment : Fragment() {
                 dialog.dismiss()
 
             }.setNegativeButton(
-                "Cancel"
+                resources.getString(R.string.cancel)
             ) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
             }.show()

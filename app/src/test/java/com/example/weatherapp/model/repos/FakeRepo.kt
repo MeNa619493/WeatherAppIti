@@ -26,12 +26,14 @@ class FakeRepo: Repo {
         language: String
     ): Response<WeatherResponse> {
         return if (shouldReturnError) {
-            Response.error(400, ResponseBody.create(
-                MediaType.parse("application/json"),
-                language.toByteArray()))
+            Response.success(getCurrentWeather())
         } else {
             Response.success(weatherData[0])
         }
+    }
+
+    override suspend fun getCurrentWeather(): WeatherResponse {
+        return weatherData.first { !it.isFavourite }
     }
 
     override suspend fun insertWeather(weatherResponse: WeatherResponse) {
@@ -39,7 +41,11 @@ class FakeRepo: Repo {
     }
 
     override fun getAllWeather(): Flow<List<WeatherResponse>> {
-        return flowOf(weatherData)
+        return flowOf(weatherData.filter { it.isFavourite })
+    }
+
+    override suspend fun deleteCurrentWeather() {
+        weatherData.remove(weatherData.first { !it.isFavourite })
     }
 
     override suspend fun deleteWeather(weatherResponse: WeatherResponse) {
@@ -51,9 +57,14 @@ class FakeRepo: Repo {
         return weatherAlert.id!!.toLong()
     }
 
-    override fun getAllAerts(): Flow<List<WeatherAlert>> {
-        return flowOf(alertData)
+    override fun getAllAerts(currentTime: Long): Flow<List<WeatherAlert>> {
+        return flowOf(alertData.filter { (it.endDate + it.timeTo) > currentTime })
     }
+
+    override suspend fun deleteAlerts(currentTime: Long) {
+        alertData.removeIf { (it.endDate + it.timeTo) < currentTime }
+    }
+
 
     override suspend fun deleteAlert(weatherAlert: WeatherAlert): Int {
         alertData.remove(weatherAlert)

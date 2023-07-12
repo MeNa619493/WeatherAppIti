@@ -198,7 +198,7 @@ class HomeFragment : Fragment() {
         alertDialogBuilder.setPositiveButton(getString(R.string.permission_postive_button)) { dialog: DialogInterface, _: Int ->
             gotoAppPermission()
         }
-        alertDialogBuilder.setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
+        alertDialogBuilder.setNegativeButton(resources.getString(R.string.cancel)) { dialog: DialogInterface, _: Int ->
             dialog.dismiss()
         }
         alertDialogBuilder.setCancelable(false)

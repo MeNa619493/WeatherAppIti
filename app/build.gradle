@@ -126,6 +126,5 @@ dependencies {
     androidTestImplementation 'app.cash.turbine:turbine:1.0.0'
     androidTestImplementation "io.mockk:mockk-android:1.13.5"
 
-    // detect memory leak
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
+
 }
