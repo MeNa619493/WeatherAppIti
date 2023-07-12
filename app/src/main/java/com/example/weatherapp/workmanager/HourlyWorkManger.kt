@@ -34,15 +34,14 @@ class HourlyWorkManger @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
-        val id = inputData.getInt(Utils.ALERT_ID, 0)
         withContext(Dispatchers.IO){
-            startAlert(id)
+            startAlert()
         }
         Log.e("doWork", "oneTimeWorkRequest")
         return Result.success()
     }
 
-    private suspend fun startAlert(id: Int) {
+    private suspend fun startAlert() {
         val weatherResponse = repo.getCurrentWeather(
             sharedPreferences.getString(Utils.LAT, "0.0"),
             sharedPreferences.getString(Utils.LONG, "0.0"),

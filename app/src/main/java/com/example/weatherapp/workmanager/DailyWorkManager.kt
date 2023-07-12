@@ -62,9 +62,6 @@ class DailyWorkManager @AssistedInject constructor(
     }
 
     private fun setHourlyWorkManger(delay: Long, id: Int) {
-        val data = Data.Builder()
-        data.putInt(Utils.ALERT_ID, id)
-
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
@@ -73,7 +70,6 @@ class DailyWorkManager @AssistedInject constructor(
         val oneTimeWorkRequest = OneTimeWorkRequest.Builder(HourlyWorkManger::class.java)
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setConstraints(constraints)
-            .setInputData(data.build())
             .build()
 
         WorkManager.getInstance(context).enqueueUniqueWork(

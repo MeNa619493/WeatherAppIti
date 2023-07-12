@@ -15,7 +15,7 @@ interface WeatherDao {
     @Query("Delete from WeatherResponse where isFavourite = 0")
     suspend fun deleteCurrentWeather()
 
-    @Query("Select * from WeatherResponse")
+    @Query("Select * from WeatherResponse where isFavourite = 1")
     fun getAllWeather(): Flow<List<WeatherResponse>>
 
     @Delete
