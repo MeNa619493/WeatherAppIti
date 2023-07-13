@@ -62,7 +62,7 @@ class FavoriteDetailsViewModelTest {
         // Then
         val value = viewModel.weather.getOrAwaitValue()
 
-        assertThat(value.data, not(CoreMatchers.nullValue()))
+        assertThat(value.data, not(nullValue()))
         assertEquals(value.data, weather1)
     }
 

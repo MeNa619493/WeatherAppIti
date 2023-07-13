@@ -99,7 +99,6 @@ class SharedViewModelTest {
 
         // Then
         val value = viewModel.weather.getOrAwaitValue()
-
         Assert.assertThat(value.data?.isFavourite, `is`(false))
     }
 
@@ -109,8 +108,8 @@ class SharedViewModelTest {
         viewModel.saveFavLocationWeather("","","","")
 
         // Then
-        val result = repository.weatherData.count { it.isFavourite }
-        Assert.assertEquals(result, 2)
+        val result = viewModel.getAllFavs().getOrAwaitValue()
+        Assert.assertEquals(result.size, 2)
     }
 
     @Test
