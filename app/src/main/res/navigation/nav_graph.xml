@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.weatherapp.ui.home.HomeFragment"
+        android:name="com.dev.weatherapp.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="com.example.weatherapp.ui.favorites.allfavorites.FavoritesFragment"
+        android:name="com.dev.weatherapp.ui.favorites.allfavorites.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" >
         <action
@@ -44,12 +44,12 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.weatherapp.ui.settings.SettingsFragment"
+        android:name="com.dev.weatherapp.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.weatherapp.ui.map.MapFragment"
+        android:name="com.dev.weatherapp.ui.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
         <argument
@@ -58,7 +58,7 @@
     </fragment>
     <fragment
         android:id="@+id/alertsFragment"
-        android:name="com.example.weatherapp.ui.alerts.allalerts.AlertsFragment"
+        android:name="com.dev.weatherapp.ui.alerts.allalerts.AlertsFragment"
         android:label="fragment_alerts"
         tools:layout="@layout/fragment_alerts" >
         <action
@@ -67,15 +67,15 @@
     </fragment>
     <dialog
         android:id="@+id/alertDialogFragment"
-        android:name="com.example.weatherapp.ui.alerts.dialog.AlertDialogFragment"
+        android:name="com.dev.weatherapp.ui.alerts.dialog.AlertDialogFragment"
         android:label="AlertDialogFragment" />
     <fragment
         android:id="@+id/favoriteDetailsFragment"
-        android:name="com.example.weatherapp.ui.favorites.favoritedetails.FavoriteDetailsFragment"
+        android:name="com.dev.weatherapp.ui.favorites.favoritedetails.FavoriteDetailsFragment"
         android:label="fragment_favorite_details"
         tools:layout="@layout/fragment_favorite_details" >
         <argument
             android:name="weather"
-            app:argType="com.example.weatherapp.model.pojo.WeatherResponse" />
+            app:argType="com.dev.weatherapp.model.pojo.WeatherResponse" />
     </fragment>
 </navigation>
